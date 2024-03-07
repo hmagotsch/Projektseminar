@@ -7,6 +7,9 @@ from io import BytesIO
 from io import StringIO
 import os
 import random
+from sklearn.cluster import KMeans
+from sklearn.preprocessing import StandardScaler
+import matplotlib.pyplot as plt
 
 # Funktionen für verschiedene Seiten
 def home():
@@ -247,7 +250,54 @@ def page2():
 def page3():
     st.title("Predictive Process Monitoring")
     # Hier Inhalt für Seite 2 definieren
-    
+
+def page4():
+    def calculate_clusters(df):
+        df['NetproJob'] = (df.groupby('Job')['Net'].transform('max') - df.groupby('Job')['Net'].transform('min'))
+        df['GrossproJob'] = (df.groupby('Job')['Gross'].transform('max') - df.groupby('Job')['Gross'].transform('min'))
+
+        features = df.groupby('Job').agg({'Speed': 'mean', 'NetproJob': 'first'}).reset_index()
+        scaler = StandardScaler()
+        scaled_features = scaler.fit_transform(features[['Speed', 'NetproJob']])
+
+        num_clusters = 5
+        kmeans = KMeans(n_clusters=num_clusters)
+        features['cluster'] = kmeans.fit_predict(scaled_features)
+
+        return features
+
+    def visualize_clusters(features):
+        plt.scatter(features['Speed'], features['NetproJob'], c=features['cluster'], cmap='viridis')
+        plt.title('KMeans Clustering of Job')
+        plt.xlabel('Mean Speed')
+        plt.ylabel('Net')
+        for i, txt in enumerate(features['Job']):
+            plt.annotate(txt, (features['Speed'][i], features['NetproJob'][i]), textcoords="offset points", xytext=(0,5), ha='center')
+
+        st.pyplot()
+
+    def main():
+        st.title('Clustering')
+
+        # Upload data
+        uploaded_cluster_file = st.file_uploader('Upload your data (CSV file)', type='csv')
+
+        if uploaded_cluster_file is not None:
+            st.subheader('Uploaded Data Preview:')
+            df = pd.read_csv(uploaded_file)
+            st.write(df.head())
+
+            # Calculate clusters
+            features = calculate_clusters(df)
+
+            # Visualize clusters
+            st.subheader('Clustering Results:')
+            visualize_clusters(features)
+
+    if __name__ == "__main__":
+        main()
+
+
 
 # Hauptprogramm
 def main():
