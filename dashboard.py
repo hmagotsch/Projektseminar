@@ -10,7 +10,7 @@ import random
 from sklearn.cluster import KMeans
 from sklearn.preprocessing import StandardScaler
 import matplotlib.pyplot as plt
-import plotly.graph_objects as go
+#import plotly.graph_objects as go
 
 # Funktionen für verschiedene Seiten
 def home():
