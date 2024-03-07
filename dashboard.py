@@ -284,7 +284,7 @@ def page4():
 
         if uploaded_cluster_file is not None:
             st.subheader('Uploaded Data Preview:')
-            df = pd.read_csv(uploaded_cluster_file)
+            df = pd.read_csv(uploaded_cluster_file,sep=";")
             st.write(df.head())
 
             # Calculate clusters
