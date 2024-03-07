@@ -269,37 +269,37 @@ def page4():
 
     def visualize_clusters(features):
         #Ansatz mit plt
-        #plt.scatter(features['Speed'], features['NetproJob'], c=features['cluster'], cmap='viridis')
-        #plt.title('KMeans Clustering of Job')
-        #plt.xlabel('Mean Speed')
-        #plt.ylabel('Net')
-        #for i, txt in enumerate(features['Job']):
-        #    plt.annotate(txt, (features['Speed'][i], features['NetproJob'][i]), textcoords="offset points", xytext=(0,5), ha='center')
+        plt.scatter(features['Speed'], features['NetproJob'], c=features['cluster'], cmap='viridis')
+        plt.title('KMeans Clustering of Job')
+        plt.xlabel('Mean Speed')
+        plt.ylabel('Net')
+        for i, txt in enumerate(features['Job']):
+            plt.annotate(txt, (features['Speed'][i], features['NetproJob'][i]), textcoords="offset points", xytext=(0,5), ha='center')
 
-        #st.pyplot()
+        st.pyplot()
 
         #Ansatz mit plotly
-        fig = go.Figure()
+        #fig = go.Figure()
 
-        for cluster_value in features['cluster'].unique():
-            cluster_data = features[features['cluster'] == cluster_value]
-            fig.add_trace(go.Scatter(
-                x=cluster_data['Speed'],
-                y=cluster_data['NetproJob'],
-                mode='markers',
-                marker=dict(color=cluster_value),
-                text=cluster_data['Job'],
-                name=f'Cluster {cluster_value}'
-             ))
+        #for cluster_value in features['cluster'].unique():
+         #   cluster_data = features[features['cluster'] == cluster_value]
+          #  fig.add_trace(go.Scatter(
+           #     x=cluster_data['Speed'],
+            #    y=cluster_data['NetproJob'],
+             #   mode='markers',
+              #  marker=dict(color=cluster_value),
+               # text=cluster_data['Job'],
+                #name=f'Cluster {cluster_value}'
+           #  ))
 
-        fig.update_layout(
-            title='KMeans Clustering of Job',
-            xaxis=dict(title='Mean Speed'),
-            yaxis=dict(title='Net'),
-            showlegend=True
-        )
+        #fig.update_layout(
+        #    title='KMeans Clustering of Job',
+        #    xaxis=dict(title='Mean Speed'),
+        #    yaxis=dict(title='Net'),
+         #   showlegend=True
+      #  )
 
-        st.plotly_chart(fig)
+       # st.plotly_chart(fig)
 
     def main():
         st.title('Clustering')
