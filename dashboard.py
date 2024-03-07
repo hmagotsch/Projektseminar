@@ -302,7 +302,7 @@ def page4():
 # Hauptprogramm
 def main():
     st.sidebar.title("Navigation")
-    pages = {"Home": home, "KPI": page1, "Process View": page2, "Predictive Process Monitoring": page3}
+    pages = {"Home": home, "KPI": page1, "Process View": page2, "Predictive Process Monitoring": page3,"Clustering":page4}
     selection = st.sidebar.radio("Navigate To", list(pages.keys()))
 
     # Seiteninhalt anzeigen
