@@ -253,53 +253,68 @@ def page3():
     # Hier Inhalt für Seite 2 definieren
 
 def page4():
-    def calculate_clusters(df):
+    def calculate_clusters(df, num_clusters):
+
+
+        #convert CheckIn and CheckOut to datetime
+        #df['CheckIn'] = pd.to_datetime(df['CheckIn'])
+        #df['CheckOut'] = pd.to_datetime(df['CheckOut'])
+
+
+        #calculate the duration of each job
+        #df['Duration']=(df.groupby('Job')['CheckOut'].transform('max')-df.groupby('Job')['CheckIn'].transform('min')).dt.total_seconds()
+        #df['Duration']
+
+        
+
         df['NetproJob'] = (df.groupby('Job')['Net'].transform('max') - df.groupby('Job')['Net'].transform('min'))
         df['GrossproJob'] = (df.groupby('Job')['Gross'].transform('max') - df.groupby('Job')['Gross'].transform('min'))
 
-        features = df.groupby('Job').agg({'Speed': 'mean', 'NetproJob': 'first'}).reset_index()
+        features = df.groupby('Job').agg({'Speed': 'mean', 'NetproJob': 'first','Duration':'first','GrossproJob':'first'}).reset_index()
         scaler = StandardScaler()
-        scaled_features = scaler.fit_transform(features[['Speed', 'NetproJob']])
+        scaled_features = scaler.fit_transform(features[['Speed', 'NetproJob','Duration','GrossproJob']])
 
-        num_clusters = 5
+        #num_clusters = 5
         kmeans = KMeans(n_clusters=num_clusters)
         features['cluster'] = kmeans.fit_predict(scaled_features)
 
         return features
 
-    def visualize_clusters(features):
+    def visualize_clusters_plt(features,x_feature, y_feature):
         #Ansatz mit plt
-        plt.scatter(features['Speed'], features['NetproJob'], c=features['cluster'], cmap='viridis')
-        plt.title('KMeans Clustering of Job')
-        plt.xlabel('Mean Speed')
-        plt.ylabel('Net')
+        fig, ax = plt.subplots()
+        scatter = ax.scatter(features[x_feature], features[y_feature], c=features['cluster'], cmap='viridis')
+        ax.set_title('KMeans Clustering of Job')
+        ax.set_xlabel(x_feature)
+        ax.set_ylabel(y_feature)
         for i, txt in enumerate(features['Job']):
-            plt.annotate(txt, (features['Speed'][i], features['NetproJob'][i]), textcoords="offset points", xytext=(0,5), ha='center')
+            ax.annotate(txt, (features[x_feature][i], features[y_feature][i]), textcoords="offset points", xytext=(0,5), ha='center')
 
-        st.pyplot()
+        st.pyplot(fig)
 
+    def visualize_clusters_pl(features,x_feature,y_feature):
         #Ansatz mit plotly
-        #fig = go.Figure()
+        fig = go.Figure()
 
-        #for cluster_value in features['cluster'].unique():
-         #   cluster_data = features[features['cluster'] == cluster_value]
-          #  fig.add_trace(go.Scatter(
-           #     x=cluster_data['Speed'],
-            #    y=cluster_data['NetproJob'],
-             #   mode='markers',
-              #  marker=dict(color=cluster_value),
-               # text=cluster_data['Job'],
-                #name=f'Cluster {cluster_value}'
-           #  ))
+        for cluster_value in features['cluster'].unique():
+            cluster_data = features[features['cluster'] == cluster_value]
+            fig.add_trace(go.Scatter(
+                x=cluster_data[x_feature],
+                y=cluster_data[y_feature],
+                mode='markers',
+                marker=dict(color=cluster_value),
+                text=cluster_data['Job'],
+                name=f'Cluster {cluster_value}'
+             ))
 
-        #fig.update_layout(
-        #    title='KMeans Clustering of Job',
-        #    xaxis=dict(title='Mean Speed'),
-        #    yaxis=dict(title='Net'),
-         #   showlegend=True
-      #  )
+        fig.update_layout(
+            title='KMeans Clustering of Job',
+            xaxis=dict(title=x_feature),
+            yaxis=dict(title=y_feature),
+           showlegend=True
+        )
 
-       # st.plotly_chart(fig)
+        st.plotly_chart(fig)
 
     def main():
         st.title('Clustering')
@@ -309,18 +324,47 @@ def page4():
 
         if uploaded_cluster_file is not None:
             st.subheader('Uploaded Data Preview:')
-            df = pd.read_csv(uploaded_cluster_file,sep=";")
+            df = pd.read_csv(uploaded_cluster_file,sep=",")
             st.write(df.head())
 
+            #Sidebar for user input
+            st.sidebar.header('Cluster Settings')
+            num_clusters = st.sidebar.slider('Number of Clusters', min_value=2, max_value=10, value=5)
+
+            #choose features for visualization
+            x_feature = st.sidebar.selectbox('Select X Feature', ['Speed', 'NetproJob', 'Duration', 'GrossproJob'])
+            y_feature = st.sidebar.selectbox('Select Y Feature', ['Speed', 'NetproJob', 'Duration', 'GrossproJob'])
+
+
+
             # Calculate clusters
-            features = calculate_clusters(df)
+            features = calculate_clusters(df,num_clusters)
 
             # Visualize clusters
             st.subheader('Clustering Results:')
-            visualize_clusters(features)
+            visualize_clusters_plt(features, x_feature, y_feature)
+
+
+            visualize_clusters_pl(features,x_feature, y_feature)
+
+            
 
     if __name__ == "__main__":
         main()
+
+
+
+# Hauptprogramm
+def main():
+    st.sidebar.title("Navigation")
+    pages = {"Home": home, "KPI": page1, "Process View": page2, "Predictive Process Monitoring": page3,"Clustering":page4}
+    selection = st.sidebar.radio("Navigate To", list(pages.keys()))
+
+    # Seiteninhalt anzeigen
+    pages[selection]()
+
+if __name__ == "__main__":
+    main()
 
 
 
