@@ -13,6 +13,7 @@ import matplotlib.pyplot as plt
 import plotly.graph_objects as go
 import plotly.express as px
 
+st.set_page_config(layout='wide')
 # Funktionen für verschiedene Seiten
 def home():
     st.title("K&B Analytics")
@@ -773,15 +774,27 @@ def page4():
         st.plotly_chart(fig)
 
     def main():
+        
         st.title('Clustering')
         st.subheader('Clustering of Jobs')
 
+        
+
         # Upload data
-        uploaded_cluster_file = st.file_uploader('Upload your data (CSV file)', type='csv',key='cluster_data_jobs')
+        #uploaded_cluster_file = st.file_uploader('Upload your data (CSV file)', type='csv',key='cluster_data_jobs')
+
+        #if uploaded_cluster_file is not None:
+         #   st.subheader('Uploaded Data Preview:')
+          #  df = pd.read_csv(uploaded_cluster_file,sep=",")
+           # st.write(df.head())
+
+        file_path= "c:\\Users\\1412a\\Documents\\Projektseminar Master 2023\\VS_DB\\Maschine D mit Duration.csv"
+        uploaded_cluster_file=pd.read_csv(file_path,sep=",")
 
         if uploaded_cluster_file is not None:
             st.subheader('Uploaded Data Preview:')
-            df = pd.read_csv(uploaded_cluster_file,sep=",")
+            #df = pd.read_csv(uploaded_cluster_file,sep=",")
+            df=uploaded_cluster_file
             st.write(df.head())
 
             #Sidebar for user input
@@ -798,27 +811,51 @@ def page4():
             y3_feature = st.sidebar.selectbox('Select Y Feature', ['Speed', 'NetproJob', 'Duration', 'GrossproJob'], key= 'y3_feature')
             z3_feature = st.sidebar.selectbox('Select Z Feature',['Speed', 'NetproJob', 'Duration', 'GrossproJob'], key='z3_feature')
 
-
+            #Split layout into two columns
+            left_column, right_column = st.columns(2)
 
             # Calculate clusters
             features = calculate_clusters(df,num_clusters)
 
             # Visualize clusters
-            st.subheader('Clustering Results:')
-            #visualize_clusters_plt(features, x_feature, y_feature)
+            left_column.subheader('Clustering Results (2D):')
+
+           
 
 
-            visualize_clusters_pl(features,x_feature, y_feature)
+            # Feature selection for jobs clustering below visualizations
+            #st.sidebar.subheader('Features for 2D Graphic')
+            #x_feature = left_column.sidebar.selectbox('Select X Feature', ['Speed', 'NetproJob', 'Duration', 'GrossproJob'], key='x_feature')
+            #y_feature = left_column.sidebar.selectbox('Select Y Feature', ['Speed', 'NetproJob', 'Duration', 'GrossproJob'], key='y_feature')
 
-            visualize_clusters_3D(features,x3_feature,y3_feature,z3_feature)
+            #right_column.sidebar.subheader('Features for 3D Graphic')
+            #x3_feature = right_column.sidebar.selectbox('Select X Feature', ['Speed', 'NetproJob', 'Duration', 'GrossproJob'], key='x3_feature')
+            #y3_feature = right_column.sidebar.selectbox('Select Y Feature', ['Speed', 'NetproJob', 'Duration', 'GrossproJob'], key='y3_feature')
+            #z3_feature = right_column.sidebar.selectbox('Select Z Feature', ['Speed', 'NetproJob', 'Duration', 'GrossproJob'], key='z3_feature')
+
+            with left_column:
+                visualize_clusters_pl(features,x_feature, y_feature)
+                
+        
+
+            right_column.subheader('Clustering Results (3D)')
+
+            with right_column:
+                visualize_clusters_3D(features,x3_feature,y3_feature,z3_feature)
+
 
         st.subheader('Clustering of Machines') 
+
+        file_path2= "c:\\Users\\1412a\\Documents\\Projektseminar Master 2023\\VS_DB\\Data CL_Machines.csv"
+        uploaded_cluster_file_m=pd.read_csv(file_path2,sep=",")
+
         # Upload data
-        uploaded_cluster_file_m = st.file_uploader('Upload your data (CSV file)', type='csv',key='cluster_data_machines')
+        #uploaded_cluster_file_m = st.file_uploader('Upload your data (CSV file)', type='csv',key='cluster_data_machines')
 
         if uploaded_cluster_file_m is not None:
             st.subheader('Uploaded Data Preview:')
-            df_m = pd.read_csv(uploaded_cluster_file_m,sep=",")
+            #df_m = pd.read_csv(uploaded_cluster_file_m,sep=",")
+            df_m = uploaded_cluster_file_m
             st.write(df_m.head())
 
             #Sidebar for user input
@@ -840,14 +877,19 @@ def page4():
             # Calculate clusters
             features_m = calculate_clusters_m(df_m,num_clusters_m)
 
+            left_column_m, right_column_m = st.columns(2)
             # Visualize clusters
-            st.subheader('Clustering Results:')
+            left_column_m.subheader('Clustering Results (2D):')
             #visualize_clusters_plt(features, x_feature, y_feature)
 
+            with left_column_m:
+                visualize_clusters_pl_m(features_m,xm_feature, ym_feature)
 
-            visualize_clusters_pl_m(features_m,xm_feature, ym_feature)
+            right_column_m.subheader('Clustering Results (3D)')
 
-            visualize_clusters_3D_m(features_m,x3m_feature,y3m_feature,z3m_feature)
+
+            with right_column_m:
+                visualize_clusters_3D_m(features_m,x3m_feature,y3m_feature,z3m_feature)
 
     if __name__ == "__main__":
         main()
@@ -855,12 +897,33 @@ def page4():
 
 # Hauptprogramm
 def main():
-    st.sidebar.title("Navigation")
-    pages = {"Home": home, "KPI": page1, "Process View": page2, "Predictive Process Monitoring": page3,"Clustering":page4}
-    selection = st.sidebar.radio("Navigate To", list(pages.keys()))
+    #alte Variante mit Navigation links
+    
+    #st.sidebar.title("Navigation")
+    #pages = {"Home": home, "KPI": page1, "Process View": page2, "Predictive Process Monitoring": page3,"Clustering":page4}
+    #selection = st.sidebar.radio("Navigate To", list(pages.keys()))
 
     # Seiteninhalt anzeigen
-    pages[selection]()
+    #pages[selection]()
+
+#if __name__ == "__main__":
+ #   main()
+
+    st.title("Navigation")
+    pages = {"Home": home, "KPI": page1, "Process View": page2, "Predictive Process Monitoring": page3, "Clustering": page4}
+    
+    # Display buttons for navigation
+    col1, col2, col3, col4, col5 = st.columns(5)
+    if col1.button("Home"):
+        pages["Home"]()
+    if col2.button("KPI"):
+        pages["KPI"]()
+    if col3.button("Process View"):
+           pages["Process View"]()
+    if col4.button("Predictive Process Monitoring"):
+        pages["Predictive Process Monitoring"]()
+    if col5.button("Clustering"):
+        pages["Clustering"]()
 
 if __name__ == "__main__":
     main()
