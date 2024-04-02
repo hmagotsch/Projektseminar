@@ -587,6 +587,24 @@ def page2():
         log = pm4py.read_xes('seq1and2MachineB-exported.xes')
         log['time:timestamp'] = pd.to_datetime(log['time:timestamp'], format='%Y-%m-%dT%H:%M:%S.%f%z', errors='coerce')
 
+
+        st.markdown("**Process model represenation:**")
+
+         #Tabs für die einzelnen Prozessdarstellungen
+        tab1, tab2, tab3 = st.tabs(["BPMN Model", "Directly-Follows Graph", "Trace(s)"])
+
+        with tab1:
+            st.header("BPMN Model")
+            st.image("bpmn.png")
+
+        with tab2:
+            st.header("Directly-Follows Graph")
+            st.image("heu_net.png")
+
+        with tab3:
+            st.header("Trace(s)")
+            st.image("trace.png")  
+
         #Footprints für jede Trace berechnen
         fp_trace_by_trace = footprints_discovery.apply(log, variant=footprints_discovery.Variants.TRACE_BY_TRACE)
 
@@ -632,51 +650,10 @@ def page2():
 
         anzahl_traces = len(trace_dash2)
 
-        # Anzahl der Einträge in den inneren Listen (Anzahl der Schritte pro Trace)
-        anzahl_schritte_pro_trace = [len(inner_list) for inner_list in trace_dash2]
-
-        gesamtanzahl_schritte = sum(anzahl_schritte_pro_trace)
-
-        col1, col2, col3 = st.columns(3)
-        col1.metric("Number of print jobs", anzahl_traces)
-        col2.metric("Total Number of Messages", gesamtanzahl_schritte)
-        col3.metric("Number of Messages per print job", str(anzahl_schritte_pro_trace))
-        
-        global_start_time = log['time:timestamp'].min()
-        global_end_time = log['time:timestamp'].max()
-
-        st.write("\n")
-        st.write("\n")
-
-        col4, col5 = st.columns(2)
-        col4.metric("Startdate", global_start_time.strftime('%Y-%m-%d'))
-        col5.metric("Starttime", global_start_time.strftime('%H:%M:%S.%f'))
-
-        st.write("\n")
-        st.write("\n")
-
-        col6, col7 = st.columns(2)
-        col6.metric("Enddate:", global_end_time.strftime('%Y-%m-%d'))
-        col7.metric("Endtime:", global_end_time.strftime('%H:%M:%S.%f'))
-
-        st.write("\n")
-        st.write("\n")
-        st.divider()
-
-        # Erstelle eine leere Liste, um die Top 10 MsgValueDE mit Count zu speichern
-        top_10_msgs_list = []
-
-        for trace_info in trace_info_list:
-            top_10_msgs = trace_info.head(10)[['MsgValueDE', 'MsgValueDECount']]
-            top_10_msgs_list.append(top_10_msgs)
-
-         # Zeige die Liste mit den Top 10 MsgValueDE für jede Trace an
-        for index, top_10_msgs in enumerate(top_10_msgs_list):
-            st.write(f"Top 10 MsgValueDE for print job {index + 1}:")
-            st.dataframe(top_10_msgs, hide_index=True)
+    
 
         st.divider()
-        st.write("Occurence of Messages Ranks:")    
+        st.markdown("**Occurence of Messages Ranks:**")    
 
         trace_msg_rank_count = []
 
@@ -734,26 +711,70 @@ def page2():
                 **{f'Print job {index + 1}': f'Number Print job {index + 1}' for index in range(len(trace_msg_rank_count))}
             },
             hide_index=True,
-            height=606,
+            height=597,
         )
         
         st.divider()
-        st.write("Process model represenation:")
+        # Erstelle eine leere Liste, um die Top 10 MsgValueDE mit Count zu speichern
+        top_10_msgs_list = []
 
-         #Tabs für die einzelnen Prozessdarstellungen
-        tab1, tab2, tab3 = st.tabs(["BPMN Model", "Heuristic Net", "Trace(s)"])
+        for trace_info in trace_info_list:
+            top_10_msgs = trace_info.head(10)[['MsgValueDE', 'MsgValueDECount']]
+            top_10_msgs_list.append(top_10_msgs)
 
-        with tab1:
-            st.header("BPMN Model")
-            st.image("bpmn.png")
+        for index in range(0, len(top_10_msgs_list), 2):
+            st.markdown(f"**Print job {index + 1} and {index + 2}:**")
+            
+            # Erstelle zwei Spalten für die Anzeige der Tabellen nebeneinander
+            col1, col2 = st.columns(2)
 
-        with tab2:
-            st.header("Heuristic Net")
-            st.image("heu_net.png")
+            # Zeige den DataFrame für den ersten Print-Job in der ersten Spalte an
+            col1.write(f"Top 10 MsgValueDE for print job {index + 1}:")
+            col1.dataframe(top_10_msgs_list[index], hide_index=True)
 
-        with tab3:
-            st.header("Trace(s)")
-            st.image("trace.png")   
+            # Überprüfe, ob es ein weiteres Element in der Liste gibt, um es in der zweiten Spalte anzuzeigen
+            if index + 1 < len(top_10_msgs_list):
+                col2.write(f"Top 10 MsgValueDE for print job {index + 2}:")
+                col2.dataframe(top_10_msgs_list[index + 1], hide_index=True)
+
+
+         # Zeige die Liste mit den Top 10 MsgValueDE für jede Trace an
+        #for index, top_10_msgs in enumerate(top_10_msgs_list):
+        #    st.write(f"Top 10 MsgValueDE for print job {index + 1}:")
+        #    st.dataframe(top_10_msgs, hide_index=True)
+                
+        st.write("\n")
+        st.divider()
+        st.markdown("**Further process information:**")
+
+        # Anzahl der Einträge in den inneren Listen (Anzahl der Schritte pro Trace)
+        anzahl_schritte_pro_trace = [len(inner_list) for inner_list in trace_dash2]
+
+        gesamtanzahl_schritte = sum(anzahl_schritte_pro_trace)
+
+        col1, col2, col3 = st.columns(3)
+        col1.metric("Number of print jobs", anzahl_traces)
+        col2.metric("Total Number of Messages", gesamtanzahl_schritte)
+        col3.metric("Number of Messages per print job", str(anzahl_schritte_pro_trace))
+        
+        global_start_time = log['time:timestamp'].min()
+        global_end_time = log['time:timestamp'].max()
+
+        st.write("\n")
+        st.write("\n")
+
+        col4, col5 = st.columns(2)
+        col4.metric("Startdate", global_start_time.strftime('%Y-%m-%d'))
+        col5.metric("Starttime", global_start_time.strftime('%H:%M:%S.%f'))
+
+        st.write("\n")
+        st.write("\n")
+
+        col6, col7 = st.columns(2)
+        col6.metric("Enddate:", global_end_time.strftime('%Y-%m-%d'))
+        col7.metric("Endtime:", global_end_time.strftime('%H:%M:%S.%f'))
+
+        st.write("\n") 
 
            
 
