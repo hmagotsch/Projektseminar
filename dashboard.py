@@ -574,7 +574,6 @@ def page1():
             lin_reg()
 
 def page2():
-    
     st.title("Process View")
     
     uploaded_file = st.file_uploader("Upload a XES file", type=["xes"])
@@ -588,22 +587,7 @@ def page2():
         log['time:timestamp'] = pd.to_datetime(log['time:timestamp'], format='%Y-%m-%dT%H:%M:%S.%f%z', errors='coerce')
 
 
-        st.markdown("**Process model represenation:**")
-
-         #Tabs für die einzelnen Prozessdarstellungen
-        tab1, tab2, tab3 = st.tabs(["BPMN Model", "Directly-Follows Graph", "Trace(s)"])
-
-        with tab1:
-            st.header("BPMN Model")
-            st.image("bpmn.png")
-
-        with tab2:
-            st.header("Directly-Follows Graph")
-            st.image("heu_net.png")
-
-        with tab3:
-            st.header("Trace(s)")
-            st.image("trace.png")  
+        
 
         #Footprints für jede Trace berechnen
         fp_trace_by_trace = footprints_discovery.apply(log, variant=footprints_discovery.Variants.TRACE_BY_TRACE)
@@ -650,7 +634,59 @@ def page2():
 
         anzahl_traces = len(trace_dash2)
 
-    
+        st.write("\n")
+        
+        st.markdown("**General process information:**")
+        st.write("\n")
+
+        # Anzahl der Einträge in den inneren Listen (Anzahl der Schritte pro Trace)
+        anzahl_schritte_pro_trace = [len(inner_list) for inner_list in trace_dash2]
+
+        gesamtanzahl_schritte = sum(anzahl_schritte_pro_trace)
+
+        col1, col2, col3 = st.columns(3)
+        col1.metric("Number of print jobs", anzahl_traces)
+        col2.metric("Total Number of Messages", gesamtanzahl_schritte)
+        col3.metric("Number of Messages per print job", str(anzahl_schritte_pro_trace))
+        
+        global_start_time = log['time:timestamp'].min()
+        global_end_time = log['time:timestamp'].max()
+
+        st.write("\n")
+        #st.write("\n")
+
+        #col4, col5 = st.columns(2)
+        #col4.metric("Startdate", global_start_time.strftime('%Y-%m-%d'))
+        #col5.metric("Starttime", global_start_time.strftime('%H:%M:%S.%f'))
+
+        #st.write("\n")
+        #st.write("\n")
+
+        #col6, col7 = st.columns(2)
+        #col6.metric("Enddate:", global_end_time.strftime('%Y-%m-%d'))
+        #col7.metric("Endtime:", global_end_time.strftime('%H:%M:%S.%f'))
+
+        st.divider()
+        st.write("\n")
+
+
+        st.markdown("**Process model represenation:**")
+
+         #Tabs für die einzelnen Prozessdarstellungen
+        tab1, tab2, tab3 = st.tabs(["BPMN Model", "Directly-Follows Graph", "Trace(s)"])
+        
+        with tab1:
+            st.header("BPMN Model")
+            st.image("bpmn.png")
+
+        with tab2:
+            st.header("Directly-Follows Graph")
+            st.image("heu_net.png")
+
+        with tab3:
+            st.header("Trace(s)")
+            st.image("trace.png")
+
 
         st.divider()
         st.markdown("**Occurence of Messages Ranks:**")    
@@ -743,38 +779,10 @@ def page2():
         #    st.write(f"Top 10 MsgValueDE for print job {index + 1}:")
         #    st.dataframe(top_10_msgs, hide_index=True)
                 
-        st.write("\n")
-        st.divider()
-        st.markdown("**Further process information:**")
+         
+   
 
-        # Anzahl der Einträge in den inneren Listen (Anzahl der Schritte pro Trace)
-        anzahl_schritte_pro_trace = [len(inner_list) for inner_list in trace_dash2]
 
-        gesamtanzahl_schritte = sum(anzahl_schritte_pro_trace)
-
-        col1, col2, col3 = st.columns(3)
-        col1.metric("Number of print jobs", anzahl_traces)
-        col2.metric("Total Number of Messages", gesamtanzahl_schritte)
-        col3.metric("Number of Messages per print job", str(anzahl_schritte_pro_trace))
-        
-        global_start_time = log['time:timestamp'].min()
-        global_end_time = log['time:timestamp'].max()
-
-        st.write("\n")
-        st.write("\n")
-
-        col4, col5 = st.columns(2)
-        col4.metric("Startdate", global_start_time.strftime('%Y-%m-%d'))
-        col5.metric("Starttime", global_start_time.strftime('%H:%M:%S.%f'))
-
-        st.write("\n")
-        st.write("\n")
-
-        col6, col7 = st.columns(2)
-        col6.metric("Enddate:", global_end_time.strftime('%Y-%m-%d'))
-        col7.metric("Endtime:", global_end_time.strftime('%H:%M:%S.%f'))
-
-        st.write("\n") 
 
            
 
