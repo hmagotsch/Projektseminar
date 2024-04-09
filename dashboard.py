@@ -779,15 +779,10 @@ def page2():
         #    st.write(f"Top 10 MsgValueDE for print job {index + 1}:")
         #    st.dataframe(top_10_msgs, hide_index=True)
                 
-         
-   
-
-
-
-           
 
 def page3():
     st.title("Predictive Process Monitoring")
+    
     machines = {
         "Machine A": {"prediction": True, "message": "Kommunikation mit Positioniereinheit für Seitenanschlag Seite 1 gestört"},
         "Machine B": {"prediction": False, "message": "Rollo im Prozess"},
@@ -801,10 +796,11 @@ def page3():
         prediction = machines[selected_machine]["prediction"]
         message = machines[selected_machine]["message"]
 
-        st.subheader("Next message:")
+        st.markdown("<h3>Next message <span style='font-size: small; vertical-align: top;' title='The message that is likely to appear next in the current printing process is displayed here. The basis for the prediction is a multinomial bayes model.'>ⓘ</span>:</h3>", unsafe_allow_html=True)
         st.markdown(f"<div style='border:1px solid #ccc; padding:10px; border-radius:5px;'>{message}</div>", unsafe_allow_html=True)
 
-        st.subheader("Prediction for production stop:")
+        st.markdown("<h3>Prediction for production stop <span style='font-size: small; vertical-align: top;' title='Here we predict whether a production stop is likely to occur in the next 5 minutes or not. The associated LSTM model has learned from old data and takes messages with a MsgRank of 104 as indicators for a production stop. Depending on the prediction, the current process can be monitored more closely in order to avoid possible upcoming production stops.'>ⓘ</span>:</h3>", unsafe_allow_html=True)
+
         if prediction:
             st.error("It is very likely that there will be a production stop in the next 5 minutes.")
             st.write("### ❌")  # Red cross for production stop
@@ -815,7 +811,7 @@ def page3():
         if prediction:
             st.subheader("More information:")
             if st.button("Show more information"):
-                st.write("Hier fehlt noch was")
+                st.write("tbd")
 
 def page4():
     def calculate_clusters(df, num_clusters):
