@@ -788,7 +788,34 @@ def page2():
 
 def page3():
     st.title("Predictive Process Monitoring")
-    # Hier Inhalt für Seite 2 definieren
+    machines = {
+        "Machine A": {"prediction": True, "message": "Kommunikation mit Positioniereinheit für Seitenanschlag Seite 1 gestört"},
+        "Machine B": {"prediction": False, "message": "Rollo im Prozess"},
+        "Machine C": {"prediction": True, "message": "Warnung Nonstop wartet auf Hauptstapel herangefahren"},
+        "Machine D": {"prediction": False, "message": "Hauptstapel unten (Softwareendlage)"}
+    }
+
+    selected_machine = st.selectbox("Choose a machine:", [""] + list(machines.keys()))
+
+    if selected_machine != "":
+        prediction = machines[selected_machine]["prediction"]
+        message = machines[selected_machine]["message"]
+
+        st.subheader("Next message:")
+        st.markdown(f"<div style='border:1px solid #ccc; padding:10px; border-radius:5px;'>{message}</div>", unsafe_allow_html=True)
+
+        st.subheader("Prediction for production stop:")
+        if prediction:
+            st.error("It is very likely that there will be a production stop in the next 5 minutes.")
+            st.write("### ❌")  # Red cross for production stop
+        else:
+            st.success("It is very unlikely that there will be a production stop in the next 5 minutes.")
+            st.write("### ✅")  # Green checkmark for no production stop
+
+        if prediction:
+            st.subheader("More information:")
+            if st.button("Show more information"):
+                st.write("Hier fehlt noch was")
 
 def page4():
     def calculate_clusters(df, num_clusters):
