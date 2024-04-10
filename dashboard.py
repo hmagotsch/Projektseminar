@@ -935,7 +935,7 @@ def page4():
             title='KMeans Clustering of Machines',
             xaxis=dict(title=xm_feature),
             yaxis=dict(title=ym_feature),
-           showlegend=True
+            showlegend=True,
             legend_traceorder='normal'
         )
 
