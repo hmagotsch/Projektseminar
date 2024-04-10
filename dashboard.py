@@ -920,7 +920,7 @@ def page4():
         
         fig = go.Figure()
 
-         for cluster_value, color in zip(features_m['cluster'].unique(), custom_colors):
+        for cluster_value, color in zip(features_m['cluster'].unique(), custom_colors):
            cluster_data = features_m[features_m['cluster'] == cluster_value]
            fig.add_trace(go.Scatter(
                 x=cluster_data[xm_feature],
