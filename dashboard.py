@@ -11,6 +11,7 @@ from sklearn.cluster import KMeans
 from sklearn.preprocessing import StandardScaler
 import matplotlib.pyplot as plt
 import plotly.graph_objects as go
+import plotly.express as px
 import numpy as np
 import statsmodels.api as sm
 from scipy.stats import t
@@ -887,17 +888,21 @@ def page4():
 
     def visualize_clusters_pl(features,x_feature,y_feature):
         #Ansatz mit plotly
+        custom_colors = ['#093D79', '#4A688F','#8BBCE4','#9D9E9E','#FFFFFF','#E40613','#FA6F7C','#E4A7AA','#F39200','#E1BC89']
+    
         fig = go.Figure()
 
-        for cluster_value in features['cluster'].unique():
+        for cluster_value, color in zip(features['cluster'].unique(), custom_colors):
             cluster_data = features[features['cluster'] == cluster_value]
             fig.add_trace(go.Scatter(
                 x=cluster_data[x_feature],
                 y=cluster_data[y_feature],
                 mode='markers',
-                marker=dict(color=cluster_value),
+                #marker=dict(color=cluster_value),
+                marker=dict(color=color, size=10),
                 text=cluster_data['Job'],
                 name=f'Cluster {cluster_value}'
+                
              ))
 
         fig.update_layout(
@@ -911,15 +916,17 @@ def page4():
 
     def visualize_clusters_pl_m(features_m,xm_feature,ym_feature):
         #Ansatz mit plotly
+        custom_colors = ['#093D79', '#4A688F','#8BBCE4','#9D9E9E','#FFFFFF','#E40613','#FA6F7C','#E4A7AA','#F39200','#E1BC89']
+        
         fig = go.Figure()
 
-        for cluster_value in features_m['cluster'].unique():
-            cluster_data = features_m[features_m['cluster'] == cluster_value]
-            fig.add_trace(go.Scatter(
+         for cluster_value, color in zip(features_m['cluster'].unique(), custom_colors):
+           cluster_data = features_m[features_m['cluster'] == cluster_value]
+           fig.add_trace(go.Scatter(
                 x=cluster_data[xm_feature],
                 y=cluster_data[ym_feature],
                 mode='markers',
-                marker=dict(color=cluster_value),
+                marker=dict(color=color, size=10),
                 text=cluster_data['Machine'],
                 name=f'Cluster {cluster_value}'
              ))
@@ -929,6 +936,7 @@ def page4():
             xaxis=dict(title=xm_feature),
             yaxis=dict(title=ym_feature),
            showlegend=True
+            legend_traceorder='normal'
         )
 
         st.plotly_chart(fig)
@@ -942,7 +950,8 @@ def page4():
     def main():
         
         st.title('Clustering')
-        st.subheader('Clustering of Jobs')
+        st.markdown("<h3>Clustering of Jobs<span style='font-size:small; vertical-align:top;' title='All the jobs of one machine are clustered'>🛈</span>:</h3>", unsafe_allow_html=True)
+          
 
         
 
