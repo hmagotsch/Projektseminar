@@ -766,7 +766,7 @@ def page3():
         "Machine D": {"prediction": False, "message": "Hauptstapel unten (Softwareendlage)"}
     }
 
-    selected_machine = st.selectbox("Choose a machine:", [""] + list(machines.keys()))
+    selected_machine = st.selectbox("Select machine:", [""] + list(machines.keys()))
 
     if selected_machine != "":
         prediction = machines[selected_machine]["prediction"]
