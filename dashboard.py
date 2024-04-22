@@ -1043,7 +1043,8 @@ def page4():
 
         st.subheader('Clustering of Machines') 
 
-        file_path2= "c:\\Users\\1412a\\Documents\\Projektseminar Master 2023\\VS_DB\\Data CL_Machines.csv"
+        #file_path2= "c:\\Users\\1412a\\Documents\\Projektseminar Master 2023\\VS_DB\\Data CL_Machines.csv"
+        file_path2="https://github.com/hmagotsch/Dashboard/blob/main/Data%20Clustering_Machines.csv"
         uploaded_cluster_file_m=pd.read_csv(file_path2,sep=",")
 
         # Upload data
