@@ -71,17 +71,12 @@ def calculate_kpis(data: pd.DataFrame) -> List[float]:
       net_values = data['Net']
       num_jobs = data['Job'].max()
       waste = data['Gross'].max() - data['Gross'].max()
-      gained_net = highest_net = net_values.max() - net_values.min()
+      gained_net = net_values.max() - net_values.min()
       avg_speed = round(data['Speed'].mean())
       return [gained_net, waste, num_jobs, avg_speed]
 
-# def display_kpi_metrics(kpis: List[float], kpi_names: List[str]):
-#   st.header("KPI Metrics")
-#   for i, (col, (kpi_name, kpi_value)) in enumerate(zip(st.columns(4), zip(kpi_names, kpis))):
-#     col.metric(label=kpi_name, value=kpi_value)
-
 def display_kpi_metrics(kpis: List[float], kpi_names: List[str], units: List[str]):
-    st.header("KPI Metrics")
+    st.header("Basic Metrics")
     for i, (col, (kpi_name, kpi_value, unit)) in enumerate(zip(st.columns(4), zip(kpi_names, kpis, units))):
         col.metric(label=kpi_name, value=kpi_value, delta=None)
         col.markdown(f"<p style='font-size: small;'>{unit}</p>", unsafe_allow_html=True)
@@ -93,9 +88,11 @@ def page1():
     uploaded_cluster_file_KPI = None
 
     col1_KPI, col2_KPI = st.columns(2)
-
     with col1_KPI:
       if uploaded_cluster_file_KPI is None:
+
+        options = ['Machine A', 'Machine B', 'Machine C', 'Machine D']
+        selected_option = st.selectbox('Select Machine', options)
 
         df = load_data(file_path)
         # Display multiselect widget to filter data based on jobs
@@ -106,7 +103,7 @@ def page1():
           filtered_df = df[df['Job'].isin(selected_jobs)]
           kpis = calculate_kpis(filtered_df)
           kpi_names = ["Netto Sheets", "Waste", "Jobs", "Speed"]
-          units= ["[sheets]", "[sheets]", "[  ]", "[sheets/min]"]
+          units= ["[sheets]", "[sheets]", "[number of jobs]", "[sheets/min]"]
 
         display_kpi_metrics(kpis, kpi_names, units)
         
@@ -125,24 +122,18 @@ def page1():
           #gewichtete kombinierte Zeit pro Sheet
 
           # Convert the "CheckIn" and "CheckOut" columns to datetime objects with the specified format
-          date_format = "%Y-%m-%d %H:%M:%S.%f%z"
+          date_format = "%Y-%m-%d %H:%M:%S%z"
+          df['CheckIn'] = df['CheckIn'].str.replace('\.\d+', '', regex=True)
+          df['CheckOut'] = df['CheckOut'].str.replace('\.\d+', '', regex=True)
           df['CheckIn'] = pd.to_datetime(df['CheckIn'], format=date_format)
           df['CheckOut'] = pd.to_datetime(df['CheckOut'], format=date_format)
-
           # Add an additional row where speed is not equal to 0 for the last checkout of the last job
-          last_checkout = df[df['Job'] == df['Job'].max()]['CheckOut'].max()
-          df = df.append({'Machine': df['Machine'].iloc[-1],
-                          'FileDate': df['FileDate'].iloc[-1],
-                          'CheckIn': last_checkout,
-                          'CheckOut': last_checkout,
-                          'Speed': 1,  # Change to the appropriate non-zero speed value
-                          'Gross': df['Gross'].iloc[-1],
-                          'Net': df['Net'].iloc[-1],
-                          'MsgRank': df['MsgRank'].iloc[-1],
-                          'MsgValueDE': df['MsgValueDE'].iloc[-1],
-                          'Phase': df['Phase'].iloc[-1],
-                          'Job': df['Job'].max()},
-                        ignore_index=True)
+          last_checkout = df[df['Job'] == df['Job'].max()]['CheckIn'].max()
+
+          new_row = pd.DataFrame({'Machine': ["Machine_A"],
+                                  'FileDate': [df['FileDate'].iloc[-1]],
+                                  'CheckIn': [last_checkout]})
+          df = pd.concat([df, new_row], ignore_index=True)
 
 
           # Initialize dictionaries to keep track of the production time, job time, and non-productive time for each job
@@ -156,6 +147,8 @@ def page1():
           non_productive_start_time = None
           non_productive_time = pd.Timedelta(0)
           gained_net_start = 0
+          gained_net = 0
+          last_occurrences = df.groupby('Job').last()['Net'].to_dict()
 
           start_time = time.time()
           for index, row in df.iterrows():
@@ -185,16 +178,6 @@ def page1():
                       break
                   continue
 
-              # if phase == 'off':
-              #   # Find the index of the next occurrence of 'Production Time' after the current index
-              #   next_production_index = df[(index + 1):][df['Phase'] == 'Production Time'].index.min()
-                
-              #   if next_production_index is not None:
-              #       row = df.loc[next_production_index]
-              #       phase = row['Phase']
-              #   else:
-              #       break
-
               if speed == 0:
                   # When 'Speed' is zero, mark it as a non-productive time period
                   if non_productive_start_time is None:
@@ -208,7 +191,8 @@ def page1():
 
               if job != current_job:
                   # Job has changed, calculate the gained net
-                  gained_net_end = df.loc[(df['Job'] == job)]['Net'].iloc[-1]
+                  #gained_net_end = df.loc[(df['Job'] == job)]['Net'].iloc[-1]
+                  gained_net_end = last_occurrences.get(job)
                   gained_net = gained_net_end - gained_net_start
                   job_gained_net[job] = gained_net
                   gained_net_start = row['Net']
@@ -246,11 +230,12 @@ def page1():
               print(f'Job {job}: Production Time = {production_time}, Non-Productive Time = {non_productive_time}, unproductive_per_net = {unproductive_per_net},productive_per_net = {productive_per_net}, Gained Net = {gained_net}, KPI = {kpi}')
 
           #Plotly Chart
-
+          #st.markdown("<h3>Productive and non-productive time per sheet <span style='font-size: small; vertical-align: top;' title='The message that is likely to appear next in the current printing process is displayed here. The basis for the prediction is a multinomial bayes model.'>ⓘ</span></h3>", unsafe_allow_html=True)
           x_values = list(range(1, len(kpis) + 1))
-
+          tooltip_text = "This is additional information."
           KPI_figure_2 = go.Figure()
-          KPI_figure_2.add_trace(go.Scatter(x=x_values, y=kpis, mode='lines+markers', name='KPI', marker=dict(color='green')))
+          KPI_figure_2.add_trace(go.Scatter(x=x_values, y=kpis, mode='lines+markers', name='KPI', marker=dict(color='#4A688F')))
+          #KPI_figure_2.add_trace(go.Scatter(x=x_values, y=kpis, mode='lines+markers', name='KPI', marker=dict(color='green')))
           KPI_figure_2.update_layout(
               title='Productive and non-productive time per sheet',
               xaxis_title='Job',
@@ -271,24 +256,18 @@ def page1():
           df = load_data(file_path)
 
           # Convert the "CheckIn" and "CheckOut" columns to datetime objects with the specified format
-          date_format = "%Y-%m-%d %H:%M:%S.%f%z"
+          date_format = "%Y-%m-%d %H:%M:%S%z"
+          df['CheckIn'] = df['CheckIn'].str.replace('\.\d+', '', regex=True)
+          df['CheckOut'] = df['CheckOut'].str.replace('\.\d+', '', regex=True)
           df['CheckIn'] = pd.to_datetime(df['CheckIn'], format=date_format)
           df['CheckOut'] = pd.to_datetime(df['CheckOut'], format=date_format)
-
           # Add an additional row where speed is not equal to 0 for the last checkout of the last job
-          last_checkout = df[df['Job'] == df['Job'].max()]['CheckOut'].max()
-          df = df.append({'Machine': df['Machine'].iloc[-1],
-                          'FileDate': df['FileDate'].iloc[-1],
-                          'CheckIn': last_checkout,
-                          'CheckOut': last_checkout,
-                          'Speed': 1,  # Change to the appropriate non-zero speed value
-                          'Gross': df['Gross'].iloc[-1],
-                          'Net': df['Net'].iloc[-1],
-                          'MsgRank': df['MsgRank'].iloc[-1],
-                          'MsgValueDE': df['MsgValueDE'].iloc[-1],
-                          'Phase': df['Phase'].iloc[-1],
-                          'Job': df['Job'].max()},
-                      ignore_index=True)
+          last_checkout = df[df['Job'] == df['Job'].max()]['CheckIn'].max()
+
+          new_row = pd.DataFrame({'Machine': ["Machine_A"],
+                                  'FileDate': [df['FileDate'].iloc[-1]],
+                                  'CheckIn': [last_checkout]})
+          df = pd.concat([df, new_row], ignore_index=True)
 
           # Initialize dictionaries and variables
           job_production_times = {}
@@ -464,11 +443,11 @@ def page1():
           x_values = list(range(1, len(OEEs) + 1))
 
           KPI_figure = go.Figure()
-          KPI_figure.add_trace(go.Scatter(x=x_values, y=OEEs, mode='lines+markers', name='OEE', marker=dict(color='green')))
+          KPI_figure.add_trace(go.Scatter(x=x_values, y=OEEs, mode='lines+markers', name='OEE', marker=dict(color='#4A688F')))
           KPI_figure.update_layout(
               title='Overall Equipment Effectiveness',
               xaxis_title='Job',
-              yaxis_title='OEE',
+              yaxis_title='KPI',
               xaxis=dict(tickvals=x_values, tickmode='linear'),
               yaxis=dict(gridcolor='lightgrey'),
               plot_bgcolor='rgba(255, 255, 255, 0)'  # Transparent background
@@ -482,6 +461,7 @@ def page1():
           #df = pd.read_csv(uploaded_cluster_file_KPI, sep=';')
           #st.write(df.head())
         with col2_KPI:
+
           new_speed_value = st.number_input("Enter New Speed Value:", value=new_speed_value)
 
 
@@ -516,30 +496,7 @@ def page1():
             t_value = t.ppf(1 - alpha / 2, df=model.df_resid)  # T-distribution critical value
             margin_of_error = t_value * se
             prediction_ci = (predicted_value - margin_of_error, predicted_value + margin_of_error)
-
-            # # Create a scatter plot
-            # fig, ax = plt.subplots()
-            # ax.scatter(average_speed_per_job, single_variable, label='Data points')
-
-            # # Plot the regression line
-            # regression_line = model.predict(X)
-            # ax.plot(average_speed_per_job, regression_line, color='red', label='Regression Line')
-
-            # # Highlight the new value and its prediction with the correct confidence interval
-            # ax.scatter(new_speed_value, predicted_value, color='green', label='Predicted Value')
-            # ax.plot([new_speed_value, new_speed_value], [prediction_ci[0], prediction_ci[1]], color='green', linestyle='--', label='95% CI')
-
-            # # Add labels and a title
-            # ax.set_xlabel('Average Speed per Job')
-            # ax.set_ylabel('OEE')
-            # ax.set_title('Scatter Plot with Regression Line and Prediction Interval')
-
-            # # Show the plot
-            # ax.legend()
-            # st.pyplot(fig)
-
-            
-            
+        
             # Scatter plot
             scatter_trace = go.Scatter(
                 x=average_speed_per_job,
@@ -554,7 +511,7 @@ def page1():
                 y=model.predict(X),
                 mode='lines',
                 name='Regression Line',
-                line=dict(color='red')
+                line=dict(color='#E40613')
             )
 
             # Predicted value marker
@@ -563,7 +520,7 @@ def page1():
                 y=[predicted_value],
                 mode='markers',
                 name='Predicted Value',
-                marker=dict(color='green', size=10)
+                marker=dict(color='#F39200', size=10)
             )
 
             # Prediction confidence interval
@@ -572,7 +529,7 @@ def page1():
                 y=[prediction_ci[0], prediction_ci[1]],
                 mode='lines',
                 name='95% CI',
-                line=dict(color='green', dash='dash')
+                line=dict(color='#F39200', dash='dash')
             )
 
             # Layout
