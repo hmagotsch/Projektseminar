@@ -1,0 +1,300 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<log xes.version="1849-2016" xes.features="nested-attributes" xmlns="http://www.xes-standard.org/">
+	<extension name="Time" prefix="time" uri="http://www.xes-standard.org/time.xesext" />
+	<extension name="Concept" prefix="concept" uri="http://www.xes-standard.org/concept.xesext" />
+	<string key="origin" value="csv" />
+	<trace>
+		<string key="concept:name" value="1" />
+		<event>
+			<string key="Machine" value="Machine_B" />
+			<string key="FileDate" value="08.08.2023" />
+			<int key="SeqNr" value="1" />
+			<int key="LocID1" value="112" />
+			<int key="LocID2" value="0" />
+			<int key="LocID3" value="0" />
+			<int key="MsgID" value="6180" />
+			<string key="Message" value="1.126.180" />
+			<date key="CheckIn" value="2023-08-08T00:00:30.296000+00:00" />
+			<date key="CheckOut" value="2023-08-08T00:00:30.875000+00:00" />
+			<int key="Speed" value="14000" />
+			<int key="Gross" value="127455611" />
+			<int key="Net" value="125267029" />
+			<int key="MsgRank" value="106" />
+			<string key="MsgValueDE" value="Rolloeinfahrt auf Vorposition" />
+			<string key="Loc1ValueDE" value="Auslage : " />
+			<float key="Loc2ValueDE" value="nan" />
+			<float key="Loc3ValueDE" value="nan" />
+			<string key="concept:name" value="Rolloeinfahrt auf Vorposition" />
+			<date key="time:timestamp" value="2023-08-08T00:00:30.296000+00:00" />
+			<int key="@@index" value="0" />
+			<int key="@@case_index" value="0" />
+		</event>
+		<event>
+			<string key="Machine" value="Machine_B" />
+			<string key="FileDate" value="09.08.2023" />
+			<int key="SeqNr" value="1" />
+			<int key="LocID1" value="720" />
+			<int key="LocID2" value="0" />
+			<int key="LocID3" value="0" />
+			<int key="MsgID" value="8072" />
+			<string key="Message" value="7.208.072" />
+			<date key="CheckIn" value="2023-08-09T00:01:41.171000+00:00" />
+			<date key="CheckOut" value="2023-08-09T00:01:41.171000+00:00" />
+			<int key="Speed" value="3000" />
+			<int key="Gross" value="127551788" />
+			<int key="Net" value="125357895" />
+			<int key="MsgRank" value="99" />
+			<string key="MsgValueDE" value="Zähler und Maschinengeschwindigkeit" />
+			<string key="Loc1ValueDE" value="LogfileUpdate : " />
+			<float key="Loc2ValueDE" value="nan" />
+			<float key="Loc3ValueDE" value="nan" />
+			<string key="concept:name" value="Zähler und Maschinengeschwindigkeit" />
+			<date key="time:timestamp" value="2023-08-09T00:01:41.171000+00:00" />
+			<int key="@@index" value="1" />
+			<int key="@@case_index" value="0" />
+		</event>
+		<event>
+			<string key="Machine" value="Machine_B" />
+			<string key="FileDate" value="10.08.2023" />
+			<int key="SeqNr" value="1" />
+			<int key="LocID1" value="112" />
+			<int key="LocID2" value="392" />
+			<int key="LocID3" value="0" />
+			<int key="MsgID" value="3959" />
+			<string key="Message" value="1.123.923.959" />
+			<date key="CheckIn" value="2023-08-10T00:00:04.937000+00:00" />
+			<date key="CheckOut" value="2023-08-10T00:00:07.218000+00:00" />
+			<int key="Speed" value="12800" />
+			<int key="Gross" value="127670098" />
+			<int key="Net" value="125475133" />
+			<int key="MsgRank" value="99" />
+			<string key="MsgValueDE" value="Stapel frei bei Nonstop" />
+			<string key="Loc1ValueDE" value="Auslage : " />
+			<string key="Loc2ValueDE" value="Formatverstellung : " />
+			<float key="Loc3ValueDE" value="nan" />
+			<string key="concept:name" value="Stapel frei bei Nonstop" />
+			<date key="time:timestamp" value="2023-08-10T00:00:04.937000+00:00" />
+			<int key="@@index" value="2" />
+			<int key="@@case_index" value="0" />
+		</event>
+		<event>
+			<string key="Machine" value="Machine_B" />
+			<string key="FileDate" value="11.08.2023" />
+			<int key="SeqNr" value="1" />
+			<int key="LocID1" value="10" />
+			<int key="LocID2" value="0" />
+			<int key="LocID3" value="0" />
+			<int key="MsgID" value="1571" />
+			<string key="Message" value="101.571" />
+			<date key="CheckIn" value="2023-08-11T00:01:03.984000+00:00" />
+			<date key="CheckOut" value="2023-08-11T00:03:09.421000+00:00" />
+			<int key="Speed" value="0" />
+			<int key="Gross" value="127851477" />
+			<int key="Net" value="125652544" />
+			<int key="MsgRank" value="4" />
+			<string key="MsgValueDE" value="Schutz Feuchtwerk geöffnet" />
+			<string key="Loc1ValueDE" value="Druckwerk 1 : " />
+			<float key="Loc2ValueDE" value="nan" />
+			<float key="Loc3ValueDE" value="nan" />
+			<string key="concept:name" value="Schutz Feuchtwerk geöffnet" />
+			<date key="time:timestamp" value="2023-08-11T00:01:03.984000+00:00" />
+			<int key="@@index" value="3" />
+			<int key="@@case_index" value="0" />
+		</event>
+		<event>
+			<string key="Machine" value="Machine_B" />
+			<string key="FileDate" value="13.08.2023" />
+			<int key="SeqNr" value="1" />
+			<int key="LocID1" value="720" />
+			<int key="LocID2" value="0" />
+			<int key="LocID3" value="0" />
+			<int key="MsgID" value="8072" />
+			<string key="Message" value="7.208.072" />
+			<date key="CheckIn" value="2023-08-13T00:00:07.875000+00:00" />
+			<date key="CheckOut" value="2023-08-13T00:00:07.875000+00:00" />
+			<int key="Speed" value="15400" />
+			<int key="Gross" value="128315052" />
+			<int key="Net" value="126114647" />
+			<int key="MsgRank" value="99" />
+			<string key="MsgValueDE" value="Zähler und Maschinengeschwindigkeit" />
+			<string key="Loc1ValueDE" value="LogfileUpdate : " />
+			<float key="Loc2ValueDE" value="nan" />
+			<float key="Loc3ValueDE" value="nan" />
+			<string key="concept:name" value="Zähler und Maschinengeschwindigkeit" />
+			<date key="time:timestamp" value="2023-08-13T00:00:07.875000+00:00" />
+			<int key="@@index" value="4" />
+			<int key="@@case_index" value="0" />
+		</event>
+		<event>
+			<string key="Machine" value="Machine_B" />
+			<string key="FileDate" value="14.08.2023" />
+			<int key="SeqNr" value="1" />
+			<int key="LocID1" value="4" />
+			<int key="LocID2" value="0" />
+			<int key="LocID3" value="0" />
+			<int key="MsgID" value="2207" />
+			<string key="Message" value="42.207" />
+			<date key="CheckIn" value="2023-08-14T00:00:04.750000+00:00" />
+			<date key="CheckOut" value="2023-08-14T00:00:35.484000+00:00" />
+			<int key="Speed" value="15100" />
+			<int key="Gross" value="128515445" />
+			<int key="Net" value="126313759" />
+			<int key="MsgRank" value="99" />
+			<string key="MsgValueDE" value="Aufforderung Überschießsperre quittieren" />
+			<string key="Loc1ValueDE" value="Anlage : " />
+			<float key="Loc2ValueDE" value="nan" />
+			<float key="Loc3ValueDE" value="nan" />
+			<string key="concept:name" value="Aufforderung Überschießsperre quittieren" />
+			<date key="time:timestamp" value="2023-08-14T00:00:04.750000+00:00" />
+			<int key="@@index" value="5" />
+			<int key="@@case_index" value="0" />
+		</event>
+	</trace>
+	<trace>
+		<string key="concept:name" value="2" />
+		<event>
+			<string key="Machine" value="Machine_B" />
+			<string key="FileDate" value="08.08.2023" />
+			<int key="SeqNr" value="2" />
+			<int key="LocID1" value="112" />
+			<int key="LocID2" value="0" />
+			<int key="LocID3" value="0" />
+			<int key="MsgID" value="6181" />
+			<string key="Message" value="1.126.181" />
+			<date key="CheckIn" value="2023-08-08T00:00:30.875000+00:00" />
+			<date key="CheckOut" value="2023-08-08T00:00:30.953000+00:00" />
+			<int key="Speed" value="14000" />
+			<int key="Gross" value="127455614" />
+			<int key="Net" value="125267032" />
+			<int key="MsgRank" value="106" />
+			<string key="MsgValueDE" value="Initiator Vorposition" />
+			<string key="Loc1ValueDE" value="Auslage : " />
+			<float key="Loc2ValueDE" value="nan" />
+			<float key="Loc3ValueDE" value="nan" />
+			<string key="concept:name" value="Initiator Vorposition" />
+			<date key="time:timestamp" value="2023-08-08T00:00:30.875000+00:00" />
+			<int key="@@index" value="6" />
+			<int key="@@case_index" value="1" />
+		</event>
+		<event>
+			<string key="Machine" value="Machine_B" />
+			<string key="FileDate" value="09.08.2023" />
+			<int key="SeqNr" value="2" />
+			<int key="LocID1" value="720" />
+			<int key="LocID2" value="0" />
+			<int key="LocID3" value="0" />
+			<int key="MsgID" value="8072" />
+			<string key="Message" value="7.208.072" />
+			<date key="CheckIn" value="2023-08-09T00:02:40.171000+00:00" />
+			<date key="CheckOut" value="2023-08-09T00:02:40.171000+00:00" />
+			<int key="Speed" value="3000" />
+			<int key="Gross" value="127551788" />
+			<int key="Net" value="125357895" />
+			<int key="MsgRank" value="99" />
+			<string key="MsgValueDE" value="Zähler und Maschinengeschwindigkeit" />
+			<string key="Loc1ValueDE" value="LogfileUpdate : " />
+			<float key="Loc2ValueDE" value="nan" />
+			<float key="Loc3ValueDE" value="nan" />
+			<string key="concept:name" value="Zähler und Maschinengeschwindigkeit" />
+			<date key="time:timestamp" value="2023-08-09T00:02:40.171000+00:00" />
+			<int key="@@index" value="7" />
+			<int key="@@case_index" value="1" />
+		</event>
+		<event>
+			<string key="Machine" value="Machine_B" />
+			<string key="FileDate" value="10.08.2023" />
+			<int key="SeqNr" value="2" />
+			<int key="LocID1" value="314" />
+			<int key="LocID2" value="383" />
+			<int key="LocID3" value="0" />
+			<int key="MsgID" value="1816" />
+			<string key="Message" value="3.143.831.816" />
+			<date key="CheckIn" value="2023-08-10T00:00:06.703000+00:00" />
+			<date key="CheckOut" value="2023-08-10T00:00:07.437000+00:00" />
+			<int key="Speed" value="13700" />
+			<int key="Gross" value="127670105" />
+			<int key="Net" value="125475140" />
+			<int key="MsgRank" value="102" />
+			<string key="MsgValueDE" value="Bogen zu weit Seite 1" />
+			<string key="Loc1ValueDE" value="Antrieb SIS : " />
+			<string key="Loc2ValueDE" value="Fehler Sensor Seite II : " />
+			<float key="Loc3ValueDE" value="nan" />
+			<string key="concept:name" value="Bogen zu weit Seite 1" />
+			<date key="time:timestamp" value="2023-08-10T00:00:06.703000+00:00" />
+			<int key="@@index" value="8" />
+			<int key="@@case_index" value="1" />
+		</event>
+		<event>
+			<string key="Machine" value="Machine_B" />
+			<string key="FileDate" value="11.08.2023" />
+			<int key="SeqNr" value="2" />
+			<int key="LocID1" value="110" />
+			<int key="LocID2" value="0" />
+			<int key="LocID3" value="0" />
+			<int key="MsgID" value="1029" />
+			<string key="Message" value="1.101.029" />
+			<date key="CheckIn" value="2023-08-11T00:01:04.218000+00:00" />
+			<date key="CheckOut" value="2023-08-11T00:01:04.671000+00:00" />
+			<int key="Speed" value="0" />
+			<int key="Gross" value="127851477" />
+			<int key="Net" value="125652544" />
+			<int key="MsgRank" value="104" />
+			<string key="MsgValueDE" value="Schnellhalt Maschine" />
+			<string key="Loc1ValueDE" value="Antrieb : " />
+			<float key="Loc2ValueDE" value="nan" />
+			<float key="Loc3ValueDE" value="nan" />
+			<string key="concept:name" value="Schnellhalt Maschine" />
+			<date key="time:timestamp" value="2023-08-11T00:01:04.218000+00:00" />
+			<int key="@@index" value="9" />
+			<int key="@@case_index" value="1" />
+		</event>
+		<event>
+			<string key="Machine" value="Machine_B" />
+			<string key="FileDate" value="13.08.2023" />
+			<int key="SeqNr" value="2" />
+			<int key="LocID1" value="110" />
+			<int key="LocID2" value="0" />
+			<int key="LocID3" value="0" />
+			<int key="MsgID" value="10412" />
+			<string key="Message" value="11.010.412" />
+			<date key="CheckIn" value="2023-08-13T00:00:15.062000+00:00" />
+			<date key="CheckOut" value="2023-08-13T00:01:23.734000+00:00" />
+			<int key="Speed" value="15500" />
+			<int key="Gross" value="128315084" />
+			<int key="Net" value="126114679" />
+			<int key="MsgRank" value="106" />
+			<string key="MsgValueDE" value="Reserve j21200_w27_b03" />
+			<string key="Loc1ValueDE" value="Antrieb : " />
+			<float key="Loc2ValueDE" value="nan" />
+			<float key="Loc3ValueDE" value="nan" />
+			<string key="concept:name" value="Reserve j21200_w27_b03" />
+			<date key="time:timestamp" value="2023-08-13T00:00:15.062000+00:00" />
+			<int key="@@index" value="10" />
+			<int key="@@case_index" value="1" />
+		</event>
+		<event>
+			<string key="Machine" value="Machine_B" />
+			<string key="FileDate" value="14.08.2023" />
+			<int key="SeqNr" value="2" />
+			<int key="LocID1" value="304" />
+			<int key="LocID2" value="0" />
+			<int key="LocID3" value="0" />
+			<int key="MsgID" value="1340" />
+			<string key="Message" value="3.041.340" />
+			<date key="CheckIn" value="2023-08-14T00:00:04.828000+00:00" />
+			<date key="CheckOut" value="2023-08-14T00:00:10.671000+00:00" />
+			<int key="Speed" value="15100" />
+			<int key="Gross" value="128515445" />
+			<int key="Net" value="126313759" />
+			<int key="MsgRank" value="99" />
+			<string key="MsgValueDE" value="Nachlauf Fortdruck" />
+			<string key="Loc1ValueDE" value="Programm : " />
+			<float key="Loc2ValueDE" value="nan" />
+			<float key="Loc3ValueDE" value="nan" />
+			<string key="concept:name" value="Nachlauf Fortdruck" />
+			<date key="time:timestamp" value="2023-08-14T00:00:04.828000+00:00" />
+			<int key="@@index" value="11" />
+			<int key="@@case_index" value="1" />
+		</event>
+	</trace>
+</log>
