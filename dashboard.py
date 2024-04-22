@@ -22,15 +22,12 @@ st.set_page_config(layout='wide')
 # Funktionen für verschiedene Seiten
 def home():
     st.title("K&B Analytics")
-    #st.divider()
-    #st.header("Hier sind einige KIP-Kacheln auf der Startseite.")
 
     # First row with two columns
     col1, col2 = st.columns(2)
 
     # First quadratic section (top left)
     with col1:
-        
         st.header("KPI")
         st.image("https://i.imgur.com/ndWa5kp.jpg")#, width=600, clamp=True)
         expander1 = st.expander("See explanation")
