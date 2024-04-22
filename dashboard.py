@@ -22,23 +22,44 @@ st.set_page_config(layout='wide')
 # Funktionen für verschiedene Seiten
 def home():
     st.title("K&B Analytics")
-    st.divider()
+    #st.divider()
     #st.header("Hier sind einige KIP-Kacheln auf der Startseite.")
 
-    # Kacheln erstellen
-    col1, col2, col3 = st.columns(3)
+    # First row with two columns
+    col1, col2 = st.columns(2)
 
+    # First quadratic section (top left)
     with col1:
-        st.subheader("KIP 1")
-        st.metric(label="Temperature", value="70 °F", delta="1.2 °F")
+        
+        st.header("KPI")
+        st.image("https://i.imgur.com/ndWa5kp.jpg")#, width=600, clamp=True)
+        expander1 = st.expander("See explanation")
+        expander1.write("This page displays key performance indicators for the printing process. Here, you can view the essential data points for each machine and assess the performance of both past and current jobs.")
 
+    # Second quadratic section (top right)
     with col2:
-        st.subheader("KIP 2")
-        st.metric(label="Gas price", value=4, delta=-0.5)
+        st.header("Process View")
+        st.image("https://i.imgur.com/SN9oJDC.jpg")#, width=200, clamp=True)
+        expander2 = st.expander("See explanation")
+        expander2.write("The process view page displays the printing process of a job and machine using BPMN notation, leveraging process mining to extract log entries. This allows for the automated generation of process diagrams and in-depth analysis.")
 
+    # Second row with two columns
+    col3, col4 = st.columns(2)
+
+    # Third quadratic section (bottom left)
     with col3:
-        st.subheader("KIP 3")
-        st.metric(label="Active developers", value=123, delta=123)
+        st.header("Predictive Process Monitoring")
+        st.image("https://i.imgur.com/URE8B4M.jpg")
+        expander3 = st.expander("See explanation")
+        expander3.write("The page for predictive process monitoring enables users to forecast machine errors using an LSTM model. This model examines an input sequence to determine the likelihood of an production stop occurring within the next 10 minutes.")
+
+    # Fourth quadratic section (bottom right)
+    with col4:
+        st.header("Clustering")
+        st.image("https://i.imgur.com/OqspZSv.jpg")
+        expander4 = st.expander("See explanation")
+        expander4.write("The clustering page employs a K-means algorithm to group printing jobs from different machines based on key performance indicators.")
+
 
 @st.cache_data
 def load_data(file):
