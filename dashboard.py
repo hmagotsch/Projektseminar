@@ -812,7 +812,11 @@ def page3():
         if prediction:
             st.subheader("More information:")
             if st.button("Show more information"):
-                st.write("tbd")
+                # Load data from CSV
+                data = pd.read_csv('MachineB_with_Job.csv', sep=';')
+                # Filter and display last 10 rows with selected columns
+                st.write("### The last 10 Messages")
+                st.write(data[['MsgValueDE', 'CheckIn']].tail(10).reset_index(drop=True))
 
 def page4():
     def calculate_clusters(df, num_clusters):
