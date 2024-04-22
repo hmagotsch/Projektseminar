@@ -792,21 +792,10 @@ def page3():
                 # Filter and display last 10 rows with selected columns
                 st.write("### The last 10 Messages")
                 st.write(data[['MsgValueDE', 'CheckIn']].tail(10).reset_index(drop=True))
-
 def page4():
+
     def calculate_clusters(df, num_clusters):
 
-
-        #convert CheckIn and CheckOut to datetime
-        #df['CheckIn'] = pd.to_datetime(df['CheckIn'])
-        #df['CheckOut'] = pd.to_datetime(df['CheckOut'])
-
-
-        #calculate the duration of each job
-        #df['Duration']=(df.groupby('Job')['CheckOut'].transform('max')-df.groupby('Job')['CheckIn'].transform('min')).dt.total_seconds()
-        #df['Duration']
-
-        
 
         df['NetproJob'] = (df.groupby('Job')['Net'].transform('max') - df.groupby('Job')['Net'].transform('min'))
         df['GrossproJob'] = (df.groupby('Job')['Gross'].transform('max') - df.groupby('Job')['Gross'].transform('min'))
@@ -847,21 +836,33 @@ def page4():
 
 
     def visualize_clusters_3D(features, x3_feature, y3_feature, z3_feature):
-        #3D
-        #fig = plt.figure()
-        #ax = fig.add_subplot(111, projection='3d')
-        #scatter = ax.scatter(features[x_feature], features[y_feature], features[z_feature], c=features['cluster'], cmap='viridis')
-        #ax.set_title('KMeans Clustering of Job')
-        #ax.set_xlabel(x_feature)
-        #ax.set_ylabel(y_feature)
-        #ax.set_zlabel(z_feature)
-        #for i, txt in enumerate(features['Job']):
-         #   ax.text(features[x_feature][i], features[y_feature][i], features[z_feature][i], txt, zdir=None)
-        #st.pyplot(fig)
+        custom_colors = ['#093D79', '#4A688F', '#8BBCE4', '#9D9E9E', '#FFFFFF', '#E40613', '#FA6F7C', '#E4A7AA', '#F39200', '#E1BC89']
+    
+        fig = go.Figure()
 
+        for cluster_value, color in zip(features['cluster'].unique(), custom_colors):
+            cluster_data = features[features['cluster'] == cluster_value]
+            fig.add_trace(go.Scatter3d(
+                x=cluster_data[x3_feature],
+                y=cluster_data[y3_feature],
+                z=cluster_data[z3_feature],
+                mode='markers', 
+                marker=dict(color=color, size=10),
+                text=cluster_data['Job'],
+                name=f'Cluster {cluster_value}'
+             ))
 
-        fig = px.scatter_3d(features, x=x3_feature, y=y3_feature, z=z3_feature, color='cluster', hover_name='Job')
-        fig.update_layout(title='KMeans Clustering of Job', scene=dict(xaxis_title=x3_feature, yaxis_title=y3_feature, zaxis_title=z3_feature))
+        fig.update_layout(
+            title='KMeans Clustering of Job',
+            scene=dict(
+                xaxis=dict(title=x3_feature),
+                yaxis=dict(title=y3_feature),
+                zaxis=dict(title=z3_feature)
+            ),
+            showlegend=True,
+            plot_bgcolor='rgba(255, 255, 255, 0)'  # Transparent background
+        )
+
         st.plotly_chart(fig)
 
 
@@ -888,16 +889,21 @@ def page4():
             title='KMeans Clustering of Job',
             xaxis=dict(title=x_feature),
             yaxis=dict(title=y_feature),
-           showlegend=True
+           showlegend=True,
+           plot_bgcolor='rgba(255, 255, 255, 0)'  # Transparent background
         )
 
         st.plotly_chart(fig)
 
+      
     def visualize_clusters_pl_m(features_m,xm_feature,ym_feature):
         #Ansatz mit plotly
+        #Ansatz mit plotly
         custom_colors = ['#093D79', '#4A688F','#8BBCE4','#9D9E9E','#FFFFFF','#E40613','#FA6F7C','#E4A7AA','#F39200','#E1BC89']
-        
         fig = go.Figure()
+
+       
+
 
         for cluster_value, color in zip(features_m['cluster'].unique(), custom_colors):
            cluster_data = features_m[features_m['cluster'] == cluster_value]
@@ -914,88 +920,125 @@ def page4():
             title='KMeans Clustering of Machines',
             xaxis=dict(title=xm_feature),
             yaxis=dict(title=ym_feature),
+           showlegend=True,
+           legend_traceorder='normal'
+
+        )
+
+        st.plotly_chart(fig)
+    
+
+    def visualize_clusters_3D_m_(features_m, x3m_feature, y3m_feature, z3m_feature):
+
+        #custom_colors = ['#093D79', '#4A688F', '#8BBCE4', '#D1D4D4', '#FFFFFF', '#E40613', '#FA6F7C', '#E4A7AA', '#F39200', '#E1BC89']
+        
+        #fig = px.scatter_3d(features_m, x=x3m_feature, y=y3m_feature, z=z3m_feature, color='cluster', hover_name='Machine')
+
+
+        #fig.update_layout(title='KMeans Clustering of Machines', scene=dict(xaxis_title=x3m_feature, yaxis_title=y3m_feature, zaxis_title=z3m_feature))
+        #st.plotly_chart(fig)
+        custom_colors = ['#093D79', '#4A688F', '#8BBCE4', '#D1D4D4', '#FFFFFF', '#E40613', '#FA6F7C', '#E4A7AA', '#F39200', '#E1BC89']
+
+        # Assign a color to each cluster
+        cluster_colors = {cluster: color for cluster, color in zip(features_m['cluster'].unique(), custom_colors)}
+
+        fig = px.scatter_3d(features_m, x=x3m_feature, y=y3m_feature, z=z3m_feature, color='cluster', color_discrete_map=cluster_colors, hover_name='Machine')
+
+        fig.update_layout(title='KMeans Clustering of Machines', scene=dict(xaxis_title=x3m_feature, yaxis_title=y3m_feature, zaxis_title=z3m_feature))
+        st.plotly_chart(fig)
+
+
+
+    def visualize_clusters_3D_m(features_m, x3m_feature, y3m_feature, z3m_feature):
+        custom_colors = ['#093D79', '#4A688F', '#8BBCE4', '#9D9E9E', '#FFFFFF', '#E40613', '#FA6F7C', '#E4A7AA', '#F39200', '#E1BC89']
+    
+        fig = go.Figure()
+
+        for cluster_value, color in zip(features_m['cluster'].unique(), custom_colors):
+            cluster_data = features_m[features_m['cluster'] == cluster_value]
+            fig.add_trace(go.Scatter3d(
+                x=cluster_data[x3m_feature],
+                y=cluster_data[y3m_feature],
+                z=cluster_data[z3m_feature],
+                mode='markers',
+                marker=dict(color=color, size=10),
+                text=cluster_data['Machine'],
+                name=f'Cluster {cluster_value}'
+            ))
+
+        fig.update_layout(
+            title='KMeans Clustering of Machines',
+            scene=dict(
+                xaxis=dict(title=x3m_feature),
+                yaxis=dict(title=y3m_feature),
+                zaxis=dict(title=z3m_feature)
+            ),
             showlegend=True,
-            legend_traceorder='normal'
+            plot_bgcolor='rgba(255, 255, 255, 0)'  # Transparent background
         )
 
         st.plotly_chart(fig)
 
-    def visualize_clusters_3D_m(features_m, x3m_feature, y3m_feature, z3m_feature):
-
-        fig = px.scatter_3d(features_m, x=x3m_feature, y=y3m_feature, z=z3m_feature, color='cluster', hover_name='Machine')
-        fig.update_layout(title='KMeans Clustering of Machines', scene=dict(xaxis_title=x3m_feature, yaxis_title=y3m_feature, zaxis_title=z3m_feature))
-        st.plotly_chart(fig)
 
     def main():
         
         st.title('Clustering')
+        #st.subheader('Clustering of Jobs')
         st.markdown("<h3>Clustering of Jobs<span style='font-size:small; vertical-align:top;' title='All the jobs of one machine are clustered'>🛈</span>:</h3>", unsafe_allow_html=True)
-          
+                
 
-        
-
-        # Upload data
-        #uploaded_cluster_file = st.file_uploader('Upload your data (CSV file)', type='csv',key='cluster_data_jobs')
-
-        #if uploaded_cluster_file is not None:
-         #   st.subheader('Uploaded Data Preview:')
-          #  df = pd.read_csv(uploaded_cluster_file,sep=",")
-           # st.write(df.head())
-
+        #enter path here!!!
         file_path= "c:\\Users\\1412a\\Documents\\Projektseminar Master 2023\\VS_DB\\Maschine D mit Duration.csv"
         uploaded_cluster_file=pd.read_csv(file_path,sep=",")
 
         if uploaded_cluster_file is not None:
-            st.subheader('Uploaded Data Preview:')
-            #df = pd.read_csv(uploaded_cluster_file,sep=",")
+            options = ['Machine A', 'Machine B', 'Machine C', 'Machine D']
+            selected_option = st.selectbox('Select Machine', options , index=options.index('Machine D'))
+            #st.subheader('Uploaded Data Preview:')
             df=uploaded_cluster_file
-            st.write(df.head())
+            #st.write(df.head())
 
-            #Sidebar for user input
-            st.sidebar.header('Cluster Settings Job')
-            num_clusters = st.sidebar.slider('Number of Clusters', min_value=2, max_value=10, value=5, key='slider_job')
+        
+            num_clusters = st.slider('Number of Clusters', min_value=2, max_value=10, value=5, key='slider_job')
 
-            #choose features for visualization
-            st.sidebar.subheader('Features for 2D Graphic')
-            x_feature = st.sidebar.selectbox('Select X Feature', ['Speed', 'NetproJob', 'Duration', 'GrossproJob'], key='x_feature')
-            y_feature = st.sidebar.selectbox('Select Y Feature', ['Speed', 'NetproJob', 'Duration', 'GrossproJob'], key='y_feature')
-
-            st.sidebar.subheader('Features for 3D Graphic')
-            x3_feature = st.sidebar.selectbox('Select X Feature', ['Speed', 'NetproJob', 'Duration', 'GrossproJob'],key='x3_feature')
-            y3_feature = st.sidebar.selectbox('Select Y Feature', ['Speed', 'NetproJob', 'Duration', 'GrossproJob'], key= 'y3_feature')
-            z3_feature = st.sidebar.selectbox('Select Z Feature',['Speed', 'NetproJob', 'Duration', 'GrossproJob'], key='z3_feature')
+             # Calculate clusters
+            features = calculate_clusters(df,num_clusters)
 
             #Split layout into two columns
             left_column, right_column = st.columns(2)
 
-            # Calculate clusters
-            features = calculate_clusters(df,num_clusters)
-
-            # Visualize clusters
-            left_column.subheader('Clustering Results (2D):')
-
-           
-
-
-            # Feature selection for jobs clustering below visualizations
-            #st.sidebar.subheader('Features for 2D Graphic')
-            #x_feature = left_column.sidebar.selectbox('Select X Feature', ['Speed', 'NetproJob', 'Duration', 'GrossproJob'], key='x_feature')
-            #y_feature = left_column.sidebar.selectbox('Select Y Feature', ['Speed', 'NetproJob', 'Duration', 'GrossproJob'], key='y_feature')
-
-            #right_column.sidebar.subheader('Features for 3D Graphic')
-            #x3_feature = right_column.sidebar.selectbox('Select X Feature', ['Speed', 'NetproJob', 'Duration', 'GrossproJob'], key='x3_feature')
-            #y3_feature = right_column.sidebar.selectbox('Select Y Feature', ['Speed', 'NetproJob', 'Duration', 'GrossproJob'], key='y3_feature')
-            #z3_feature = right_column.sidebar.selectbox('Select Z Feature', ['Speed', 'NetproJob', 'Duration', 'GrossproJob'], key='z3_feature')
-
+            
+            
             with left_column:
-                visualize_clusters_pl(features,x_feature, y_feature)
+
                 
-        
+
+                st.subheader('Clustering Results (2D):') 
+                #st.markdown("<h3>Clustering Results (2D) <span style='font-size:small; vertical-align:top;' title='Clustering Results'>🛈</span>:</h3>", unsafe_allow_html=True)
+                
+
+                st.markdown("Settings:")              
+                x_feature = st.selectbox('Select X Feature', ['Speed', 'NetproJob', 'Duration', 'GrossproJob'], key='x_feature')
+                y_feature = st.selectbox('Select Y Feature', ['Speed', 'NetproJob', 'Duration', 'GrossproJob'], key='y_feature')
+                
+                
+                visualize_clusters_pl(features,x_feature, y_feature)
+                st.markdown("<h5>  <span style='font-size:small; vertical-align:top;' title='Hover over the datapoints for more details'>🛈</span>:</h5>", unsafe_allow_html=True)
+                
+                
 
             right_column.subheader('Clustering Results (3D)')
 
             with right_column:
+                st.markdown('Settings:')
+                x3_feature = st.selectbox('Select X Feature', ['Speed', 'NetproJob', 'Duration', 'GrossproJob'],key='x3_feature')
+                y3_feature = st.selectbox('Select Y Feature', ['Speed', 'NetproJob', 'Duration', 'GrossproJob'], key= 'y3_feature')
+                z3_feature = st.selectbox('Select Z Feature',['Speed', 'NetproJob', 'Duration', 'GrossproJob'], key='z3_feature')
+
                 visualize_clusters_3D(features,x3_feature,y3_feature,z3_feature)
+                
+
+
 
 
         st.subheader('Clustering of Machines') 
@@ -1007,25 +1050,12 @@ def page4():
         #uploaded_cluster_file_m = st.file_uploader('Upload your data (CSV file)', type='csv',key='cluster_data_machines')
 
         if uploaded_cluster_file_m is not None:
-            st.subheader('Uploaded Data Preview:')
+            #st.subheader('Uploaded Data Preview:')
             #df_m = pd.read_csv(uploaded_cluster_file_m,sep=",")
             df_m = uploaded_cluster_file_m
-            st.write(df_m.head())
+            #st.write(df_m.head())
 
-            #Sidebar for user input
-            st.sidebar.header('Cluster Settings Machine')
-            num_clusters_m = st.sidebar.slider('Number of Clusters', min_value=2, max_value=10, value=5, key='slider_machine')
-
-            #choose features for visualization
-            st.sidebar.subheader('Features for 2D Graphic')
-            xm_feature = st.sidebar.selectbox('Select X Feature', ['Mean_Speed', 'Net', 'Total_Jobs', 'Gross'], key='xm_feature')
-            ym_feature = st.sidebar.selectbox('Select Y Feature', ['Mean_Speed', 'Net', 'Total_Jobs', 'Gross'], key='ym_feature')
-
-            st.sidebar.subheader('Features for 3D Graphic')
-            x3m_feature = st.sidebar.selectbox('Select X Feature', ['Mean_Speed', 'Net', 'Total_Jobs', 'Gross'],key='x3m_feature')
-            y3m_feature = st.sidebar.selectbox('Select Y Feature', ['Mean_Speed', 'Net', 'Total_Jobs', 'Gross'], key= 'y3m_feature')
-            z3m_feature = st.sidebar.selectbox('Select Z Feature',['Mean_Speed', 'Net', 'Total_Jobs', 'Gross'], key='z3m_feature')
-
+            num_clusters_m = st.slider('Number of Clusters', min_value=2, max_value=10, value=5, key='slider_machine')
 
 
             # Calculate clusters
@@ -1037,12 +1067,22 @@ def page4():
             #visualize_clusters_plt(features, x_feature, y_feature)
 
             with left_column_m:
+
+                st.markdown('Settings:')
+                xm_feature = st.selectbox('Select X Feature', ['Mean_Speed', 'Net', 'Total_Jobs', 'Gross'], key='xm_feature')
+                ym_feature = st.selectbox('Select Y Feature', ['Mean_Speed', 'Net', 'Total_Jobs', 'Gross'], key='ym_feature')
+
                 visualize_clusters_pl_m(features_m,xm_feature, ym_feature)
 
             right_column_m.subheader('Clustering Results (3D)')
 
 
             with right_column_m:
+                st.markdown('Settings')
+                x3m_feature = st.selectbox('Select X Feature', ['Mean_Speed', 'Net', 'Total_Jobs', 'Gross'],key='x3m_feature')
+                y3m_feature = st.selectbox('Select Y Feature', ['Mean_Speed', 'Net', 'Total_Jobs', 'Gross'], key= 'y3m_feature')
+                z3m_feature = st.selectbox('Select Z Feature',['Mean_Speed', 'Net', 'Total_Jobs', 'Gross'], key='z3m_feature')
+
                 visualize_clusters_3D_m(features_m,x3m_feature,y3m_feature,z3m_feature)
 
     if __name__ == "__main__":
