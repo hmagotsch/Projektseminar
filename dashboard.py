@@ -775,13 +775,13 @@ def page3():
         st.markdown("<h3>Next message <span style='font-size: small; vertical-align: top;' title='The message that is likely to appear next in the current printing process is displayed here. The basis for the prediction is a multinomial bayes model.'>ⓘ</span>:</h3>", unsafe_allow_html=True)
         st.markdown(f"<div style='border:1px solid #ccc; padding:10px; border-radius:5px;'>{message}</div>", unsafe_allow_html=True)
 
-        st.markdown("<h3>Prediction for production stop <span style='font-size: small; vertical-align: top;' title='Here we predict whether a production stop is likely to occur in the next 5 minutes or not. The associated LSTM model has learned from old data and takes messages with a MsgRank of 104 as indicators for a production stop. Depending on the prediction, the current process can be monitored more closely in order to avoid possible upcoming production stops.'>ⓘ</span>:</h3>", unsafe_allow_html=True)
+        st.markdown("<h3>Prediction for production stop <span style='font-size: small; vertical-align: top;' title='Here we predict whether a production stop is likely to occur in the next minute or not. The associated LSTM model has learned from old data and takes messages with a MsgRank of 104 as indicators for a production stop. Depending on the prediction, the current process can be monitored more closely in order to avoid possible upcoming production stops.'>ⓘ</span>:</h3>", unsafe_allow_html=True)
 
         if prediction:
-            st.error("It is very likely that there will be a production stop in the next 5 minutes.")
+            st.error("It is very likely that there will be a production stop in the next minute.")
             st.write("### ❌")  # Red cross for production stop
         else:
-            st.success("It is very unlikely that there will be a production stop in the next 5 minutes.")
+            st.success("It is very unlikely that there will be a production stop in the next minute.")
             st.write("### ✅")  # Green checkmark for no production stop
 
         if prediction:
