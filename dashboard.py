@@ -775,6 +775,9 @@ def page3():
         st.markdown("<h3>Next message <span style='font-size: small; vertical-align: top;' title='The message that is likely to appear next in the current printing process is displayed here. The basis for the prediction is a multinomial bayes model.'>ⓘ</span>:</h3>", unsafe_allow_html=True)
         st.markdown(f"<div style='border:1px solid #ccc; padding:10px; border-radius:5px;'>{message}</div>", unsafe_allow_html=True)
 
+        st.markdown("<br>", unsafe_allow_html=True)
+        st.markdown("<br>", unsafe_allow_html=True)
+
         st.markdown("<h3>Prediction for production stop <span style='font-size: small; vertical-align: top;' title='Here we predict whether a production stop is likely to occur in the next minute or not. The associated LSTM model has learned from old data and takes messages with a MsgRank of 104 as indicators for a production stop. Depending on the prediction, the current process can be monitored more closely in order to avoid possible upcoming production stops.'>ⓘ</span>:</h3>", unsafe_allow_html=True)
 
         if prediction:
@@ -785,13 +788,13 @@ def page3():
             st.write("### ✅")  # Green checkmark for no production stop
 
         if prediction:
-            st.subheader("More information:")
             if st.button("Show more information"):
                 # Load data from CSV
                 data = pd.read_csv('MachineB_with_Job.csv', sep=';')
                 # Filter and display last 10 rows with selected columns
-                st.write("### The last 10 Messages")
+                st.markdown("<h3 style='font-size: 16px;'>The last 10 messages</h3>", unsafe_allow_html=True)
                 st.write(data[['MsgValueDE', 'CheckIn']].tail(10).reset_index(drop=True))
+                
 def page4():
 
     def calculate_clusters(df, num_clusters):
