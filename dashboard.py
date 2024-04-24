@@ -48,7 +48,7 @@ def home():
         st.header("Predictive Process Monitoring")
         st.image("https://i.imgur.com/URE8B4M.jpg")
         expander3 = st.expander("See explanation")
-        expander3.write("The page for predictive process monitoring enables users to forecast machine errors using an LSTM model. This model examines an input sequence to determine the likelihood of an production stop occurring within the next 10 minutes.")
+        expander3.write("This page for predictive process monitoring enables users to forecast problematic instances in the printing process. On the one hand, it predicts what the next print message is most likely to be, and on the other hand, a possible production stop can be predicted for a period of one minute with the help of a LSTM. These tools make it possible to monitor the printing process in real time and, if necessary, intervene if there are problems.")
 
     # Fourth quadratic section (bottom right)
     with col4:
