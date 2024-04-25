@@ -986,8 +986,8 @@ def page4():
     def main():
         
         st.title('Clustering')
-        #st.subheader('Clustering of Jobs')
-        st.markdown("<h3>Clustering of Jobs<span style='font-size:small; vertical-align:top;' title='All the jobs of one machine are clustered'>🛈</span>:</h3>", unsafe_allow_html=True)
+        st.subheader('Clustering of Jobs')
+        #st.markdown("<h3>Clustering of Jobs<span style='font-size:small; vertical-align:top;' title='All the jobs of one machine are clustered'>🛈</span>:</h3>", unsafe_allow_html=True)
                 
 
         #enter path here!!!
@@ -1026,7 +1026,7 @@ def page4():
                 
                 
                 visualize_clusters_pl(features,x_feature, y_feature)
-                st.markdown("<h5>  <span style='font-size:small; vertical-align:top;' title='Hover over the datapoints for more details'>🛈</span>:</h5>", unsafe_allow_html=True)
+                #st.markdown("<h5>  <span style='font-size:small; vertical-align:top;' title='Hover over the datapoints for more details'>🛈</span>:</h5>", unsafe_allow_html=True)
                 
                 
 
