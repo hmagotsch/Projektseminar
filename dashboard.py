@@ -543,9 +543,9 @@ def page1():
             # Combine traces and layout into figure
             fig_reg = go.Figure([scatter_trace, regression_line, predicted_marker, ci_line], layout)
             st.plotly_chart(fig_reg)
-            st.info(f"With a speed value of {new_speed_value} the expected OEE will be at {predicted_value}.")
-            st.info(f"The confidence interval of 95% lies between {prediction_ci[0]} and {prediction_ci[1]}.")
-
+            st.info(f"With a speed value of {new_speed_value} the expected OEE will be at {round(predicted_value,3)}.")
+            st.info(f"The confidence interval of 95% lies between {round(prediction_ci[0],3)} and {round(prediction_ci[1],3)}.")
+              
           if st.button("See Linear Regression"):
             # When the button is clicked, call your function
             lin_reg()
