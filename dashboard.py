@@ -21,7 +21,7 @@ from streamlit_option_menu import option_menu
 st.set_page_config(layout='wide')
 # Funktionen für verschiedene Seiten
 def home():
-    st.title("K&B Analytics")
+    st.title("Koenig & Bauer Analytics")
 
     # First row with two columns
     col1, col2 = st.columns(2)
@@ -29,16 +29,16 @@ def home():
     # First quadratic section (top left)
     with col1:
         st.header("KPI")
-        st.image("https://i.imgur.com/ndWa5kp.jpg")#, width=600, clamp=True)
-        expander1 = st.expander("See explanation")
-        expander1.write("This page displays key performance indicators for the printing process. Here, you can view the essential data points for each machine and assess the performance of both past and current jobs.")
+        st.image("https://i.imgur.com/pMZDa7W.jpg", width=500, clamp=True)
+        st.write("This page displays key performance indicators for the printing process. Here, you can view the essential data points for each machine and assess the performance of both past and current jobs.")
 
     # Second quadratic section (top right)
     with col2:
         st.header("Process View")
-        st.image("https://i.imgur.com/SN9oJDC.jpg")#, width=200, clamp=True)
-        expander2 = st.expander("See explanation")
-        expander2.write("The process view page displays the printing process of a job and machine using BPMN notation, leveraging process mining to extract log entries. This allows for the automated generation of process diagrams and in-depth analysis.")
+        st.image("https://i.imgur.com/B4qupGd.jpg", width=500, clamp=True)
+        #expander2 = st.expander("See explanation")
+        #expander2.write("The process view page displays the printing process of a job and machine using BPMN notation, leveraging process mining to extract log entries. This allows for the automated generation of process diagrams and in-depth analysis.")
+        st.write("The process view page displays the printing process of a job and machine using BPMN notation, leveraging process mining to extract log entries. This allows for the automated generation of process diagrams and in-depth analysis.")
 
     # Second row with two columns
     col3, col4 = st.columns(2)
@@ -46,16 +46,14 @@ def home():
     # Third quadratic section (bottom left)
     with col3:
         st.header("Predictive Process Monitoring")
-        st.image("https://i.imgur.com/URE8B4M.jpg")
-        expander3 = st.expander("See explanation")
-        expander3.write("This page for predictive process monitoring enables users to forecast problematic instances in the printing process. On the one hand, it predicts what the next print message is most likely to be, and on the other hand, a possible production stop can be predicted for a period of one minute with the help of a LSTM. These tools make it possible to monitor the printing process in real time and, if necessary, intervene if there are problems.")
+        st.image("https://i.imgur.com/jemtQPk.jpg", width=500, clamp=True)
+        st.write("The page for predictive process monitoring enables users to forecast machine errors using an LSTM model. This model examines an input sequence to determine the likelihood of an production stop occurring within the next 10 minutes.")
 
     # Fourth quadratic section (bottom right)
     with col4:
         st.header("Clustering")
-        st.image("https://i.imgur.com/OqspZSv.jpg")
-        expander4 = st.expander("See explanation")
-        expander4.write("The clustering page employs a K-means algorithm to group printing jobs from different machines based on key performance indicators.")
+        st.image("https://i.imgur.com/8HVm27N.jpg", width=500, clamp=True)
+        st.write("The clustering page employs a K-means algorithm to group printing jobs from different machines based on key performance indicators.")
 
 
 @st.cache_data
@@ -654,15 +652,15 @@ def page2():
         
         with tab1:
             st.header("BPMN Model")
-            st.image("bpmn.png")
+            st.image("https://i.imgur.com/QIRXiWg.png")
 
         with tab2:
             st.header("Directly-Follows Graph")
-            st.image("heu_net.png")
+            st.image("https://i.imgur.com/rb0rweN.png")
 
         with tab3:
             st.header("Trace(s)")
-            st.image("trace.png")
+            st.image("https://i.imgur.com/dM6RG2J.png")
 
 
         st.divider()
