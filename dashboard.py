@@ -1,7 +1,7 @@
 import streamlit as st
-import pm4py
+#import pm4py
 import pandas as pd
-from pm4py.algo.discovery.footprints import algorithm as footprints_discovery
+#from pm4py.algo.discovery.footprints import algorithm as footprints_discovery
 from collections import Counter
 from io import BytesIO
 from io import StringIO
