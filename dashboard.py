@@ -553,206 +553,278 @@ def page2():
     
     uploaded_file = st.file_uploader("Upload a XES file", type=["xes"])
 
-    if uploaded_file is not None:
-        st.subheader("Uploaded File Content:")
-        st.write("\n")
-        st.write("\n")
+    #+++Der folgende Code-Abschnitt hält die Ergebnisse für eine beispielhafte XES-Datei fest und berechnet die Ergebnisse nicht automatisch, 
+#   wenn PM4PY nicht zur Verfügung steht. Der Import muss am Anfang der Datei dann ebenfalls auskommentiert sein+++
 
-        log = pm4py.read_xes('seq1and2MachineB-exported.xes')
-        log['time:timestamp'] = pd.to_datetime(log['time:timestamp'], format='%Y-%m-%dT%H:%M:%S.%f%z', errors='coerce')
+
+
+    st.markdown("**General process information:**")
+    st.write("\n")
+    col1, col2, col3 = st.columns(3)
+    col1.metric("Number of print jobs", 2)
+    col2.metric("Total Number of Messages", 12)
+    col3.metric("Number of Messages per print job", str("[6,6]"))
+
+    st.divider()
+    st.write("\n")
+
+
+    st.markdown("**Process model represenation:**")
+
+    #Tabs für die einzelnen Prozessdarstellungen
+    tab1, tab2, tab3 = st.tabs(["BPMN Model", "Directly-Follows Graph", "Trace(s)"])
+        
+    with tab1:
+        st.header("BPMN Model")
+        st.image("bpmn.png")
+
+    with tab2:
+        st.header("Directly-Follows Graph")
+        st.image("heu_net.png")
+
+    with tab3:
+        st.header("Trace(s)")
+        st.image("trace.png")
+
+
+    st.divider()
+    st.markdown("**Occurence of Messages Ranks:**")
+
+    # Erstellen Sie die DataFrame mit den gewünschten Einträgen
+    df = pd.DataFrame({
+        "Message Rank": ["< 99", -1, 1, 2, 3, 4, 5, 6, "> 98", 99, 101, 102, 103, 104, 105, 106],
+        "Color": ["-", "#BDBDBD", "#82FA58", "#b0721e", "#0B610B", "#2E64FE", "#00FFFF", "#ffffff", "-", "#A4A4A4", "#ACFA58", "#bb7633", "#3f7633", "#0000FF", "#4aeaff", "#ffffff"],
+        "Meaning": ["durch den Drucker behebbare Meldungen", "noch nicht zugeordnet", "Information", "Warnung", "eingeschränkte Produktion möglich", "keine Produktion möglich", "nicht zuordenbar", "Info nur im Logfile", "durch den Drucker nicht behebare Meldungen", "noch nicht zugeordnet", "Information", "Warnung", "eingeschränkte Produktion möglich", "keine Produktion möglich", "nicht zuordenbar", "Info nur im Logfile"],
+        "Number Print job 1": ["-", 0, 0, 0, 0, 1, 0, 0, "-", 4, 0, 0, 0, 0, 0, 1],
+        "Number Print job 2": ["-", 0, 0, 0, 0, 0, 0, 0, "-", 2, 0, 1, 0, 1, 0, 2],
+    })
+
+    def highlight_color(value):
+      if value == "-":
+          return 'background-color: white'
+      else:
+          return f'background-color: {value}'
+
+      # Hintergrundfarbe für die Spalte "Color" setzen
+    styled_df = df.style.applymap(highlight_color, subset=['Color'])
+
+    st.dataframe(styled_df, hide_index=True, height=597,)
+
+    st.write("\n")
+    st.divider()
+    st.write("\n")
+    st.markdown("**Top 10 messages per print job:**")
+
+    col1, col2 = st.columns(2)
+
+    df_top10_1 = pd.DataFrame({
+      "Message Value": ["Zähler und Maschinengeschwindigkeit", "Rolloeinfahrt auf Vorposition", "Stapel frei bei Nonstop", "Schutz Feuchtwerk geöffnet", "Aufforderung Überschießsperre quittieren"],
+      "Number": [2, 1, 1, 1, 1]
+    })
+
+    df_top10_2 = pd.DataFrame({
+      "Message Value": ["Initiator Vorposition", "Zähler und Maschinengeschwindigkeit", "Bogen zu weit Seite 1", "Schnellhalt Maschine", "Reserve j21200_w27_b03", "Nachlauf Fortdruck"],
+      "Number": [1, 1, 1, 1, 1, 1]
+    })
+
+    col1.write("Top 10 MsgValueDE for print job 1")
+    col1.dataframe(df_top10_1, hide_index=True)
+
+    col2.write("Top 10 MsgValueDE for print job 2")
+    col2.dataframe(df_top10_2, hide_index=True)
+
+
+
+#+++Folgender Code-Abschnitt berechnet die Ergebnisse dynamisch aus einer beliebigen XES-Datei und kann verwendet werden, wenn der Import wieder möglich ist, 
+#   TPU v2 genutzt wird oder der Code lokal ausgeführt wird+++
+
+
+
+#    if uploaded_file is not None:
+#        st.subheader("Uploaded File Content:")
+#        st.write("\n")
+#        st.write("\n")
+
+#        log = pm4py.read_xes('seq1and2MachineB-exported.xes')
+#        log['time:timestamp'] = pd.to_datetime(log['time:timestamp'], format='%Y-%m-%dT%H:%M:%S.%f%z', errors='coerce')
 
 
         
 
         #Footprints für jede Trace berechnen
-        fp_trace_by_trace = footprints_discovery.apply(log, variant=footprints_discovery.Variants.TRACE_BY_TRACE)
+#        fp_trace_by_trace = footprints_discovery.apply(log, variant=footprints_discovery.Variants.TRACE_BY_TRACE)
 
         #Extrahiere die relevanten Spalten aus dem Log
-        relevant_columns = ['MsgValueDE', 'MsgRank']
+#        relevant_columns = ['MsgValueDE', 'MsgRank']
 
         #Entferne Duplikate, um eindeutige Paare von MsgValueDE und MsgRank zu erhalten
-        msg_rank_df = log[relevant_columns].drop_duplicates()
+#        msg_rank_df = log[relevant_columns].drop_duplicates()
 
         #Mapping für die Farben
-        mapping = {
-            -1: '#BDBDBD',
-            1: '#82FA58',
-            2: '#b0721e',
-            3: '#0B610B',
-            4: '#2E64FE',
-            5: '#00FFFF',
-            6: '#ffffff',
-            99: '#A4A4A4',
-            101: '#ACFA58',
-            102: '#bb7633',
-            103: '#3f7633',
-            104: '#0000FF',
-            105: '#4aeaff',
-            106: '#ffffff'
-        }
+#        mapping = {
+#            -1: '#BDBDBD',
+#            1: '#82FA58',
+#            2: '#b0721e',
+#            3: '#0B610B',
+#            4: '#2E64FE',
+#            5: '#00FFFF',
+#            6: '#ffffff',
+#            99: '#A4A4A4',
+#            101: '#ACFA58',
+#            102: '#bb7633',
+#            103: '#3f7633',
+#            104: '#0000FF',
+#            105: '#4aeaff',
+#            106: '#ffffff'
+#        }
 
          # Füge eine Spalte für die Farbe basierend auf dem MSGRank hinzu
-        msg_rank_df['Color'] = msg_rank_df['MsgRank'].map(mapping)
+#        msg_rank_df['Color'] = msg_rank_df['MsgRank'].map(mapping)
 
         # Speichere die Farben, den MsgRank und die Anzahl für jede Trace in trace_dash
-        trace_info_list = []
+#        trace_info_list = []
 
-        for trace in fp_trace_by_trace:
-            trace_info = pd.DataFrame(trace['trace'], columns=['MsgValueDE'])
-            trace_info = pd.merge(trace_info, msg_rank_df, on='MsgValueDE')
-            trace_info['MsgValueDECount'] = trace_info.groupby('MsgValueDE')['MsgValueDE'].transform('count')
-            trace_info = trace_info[['MsgValueDE', 'MsgRank', 'Color', 'MsgValueDECount']].drop_duplicates()
-            trace_info = trace_info.sort_values(by='MsgValueDECount', ascending=False)# Sortiere nach MsgCount absteigend
-            trace_info_list.append(trace_info)
+#        for trace in fp_trace_by_trace:
+#            trace_info = pd.DataFrame(trace['trace'], columns=['MsgValueDE'])
+#            trace_info = pd.merge(trace_info, msg_rank_df, on='MsgValueDE')
+#            trace_info['MsgValueDECount'] = trace_info.groupby('MsgValueDE')['MsgValueDE'].transform('count')
+#            trace_info = trace_info[['MsgValueDE', 'MsgRank', 'Color', 'MsgValueDECount']].drop_duplicates()
+#            trace_info = trace_info.sort_values(by='MsgValueDECount', ascending=False)# Sortiere nach MsgCount absteigend
+#            trace_info_list.append(trace_info)
 
-        trace_dash2 = [list(trace['trace']) for trace in fp_trace_by_trace]
+#        trace_dash2 = [list(trace['trace']) for trace in fp_trace_by_trace]
 
-        anzahl_traces = len(trace_dash2)
+#        anzahl_traces = len(trace_dash2)
 
-        st.write("\n")
+#        st.write("\n")
         
-        st.markdown("**General process information:**")
-        st.write("\n")
+#        st.markdown("**General process information:**")
+#        st.write("\n")
 
         # Anzahl der Einträge in den inneren Listen (Anzahl der Schritte pro Trace)
-        anzahl_schritte_pro_trace = [len(inner_list) for inner_list in trace_dash2]
+#        anzahl_schritte_pro_trace = [len(inner_list) for inner_list in trace_dash2]
 
-        gesamtanzahl_schritte = sum(anzahl_schritte_pro_trace)
+#        gesamtanzahl_schritte = sum(anzahl_schritte_pro_trace)
 
-        col1, col2, col3 = st.columns(3)
-        col1.metric("Number of print jobs", anzahl_traces)
-        col2.metric("Total Number of Messages", gesamtanzahl_schritte)
-        col3.metric("Number of Messages per print job", str(anzahl_schritte_pro_trace))
+#        col1, col2, col3 = st.columns(3)
+#        col1.metric("Number of print jobs", anzahl_traces)
+#        col2.metric("Total Number of Messages", gesamtanzahl_schritte)
+#        col3.metric("Number of Messages per print job", str(anzahl_schritte_pro_trace))
         
-        global_start_time = log['time:timestamp'].min()
-        global_end_time = log['time:timestamp'].max()
+#        global_start_time = log['time:timestamp'].min()
+#        global_end_time = log['time:timestamp'].max()
 
-        st.write("\n")
-        #st.write("\n")
+#        st.write("\n")
+        
 
-        #col4, col5 = st.columns(2)
-        #col4.metric("Startdate", global_start_time.strftime('%Y-%m-%d'))
-        #col5.metric("Starttime", global_start_time.strftime('%H:%M:%S.%f'))
-
-        #st.write("\n")
-        #st.write("\n")
-
-        #col6, col7 = st.columns(2)
-        #col6.metric("Enddate:", global_end_time.strftime('%Y-%m-%d'))
-        #col7.metric("Endtime:", global_end_time.strftime('%H:%M:%S.%f'))
-
-        st.divider()
-        st.write("\n")
+#        st.divider()
+#        st.write("\n")
 
 
-        st.markdown("**Process model represenation:**")
+#        st.markdown("**Process model represenation:**")
 
          #Tabs für die einzelnen Prozessdarstellungen
-        tab1, tab2, tab3 = st.tabs(["BPMN Model", "Directly-Follows Graph", "Trace(s)"])
+#        tab1, tab2, tab3 = st.tabs(["BPMN Model", "Directly-Follows Graph", "Trace(s)"])
         
-        with tab1:
-            st.header("BPMN Model")
-            st.image("https://i.imgur.com/QIRXiWg.png")
+#        with tab1:
+#            st.header("BPMN Model")
+#            st.image("bpmn.png")
 
-        with tab2:
-            st.header("Directly-Follows Graph")
-            st.image("https://i.imgur.com/rb0rweN.png")
+#        with tab2:
+#            st.header("Directly-Follows Graph")
+#            st.image("heu_net.png")
 
-        with tab3:
-            st.header("Trace(s)")
-            st.image("https://i.imgur.com/dM6RG2J.png")
+#        with tab3:
+#            st.header("Trace(s)")
+#            st.image("trace.png")
 
 
-        st.divider()
-        st.markdown("**Occurence of Messages Ranks:**")    
+#        st.divider()
+#        st.markdown("**Occurence of Messages Ranks:**")    
 
-        trace_msg_rank_count = []
+#        trace_msg_rank_count = []
 
-        for trace_info in trace_info_list:
-            msg_rank_count = trace_info.groupby('MsgRank')['MsgValueDECount'].sum().reset_index()
-            trace_msg_rank_count.append(msg_rank_count)
+#        for trace_info in trace_info_list:
+#            msg_rank_count = trace_info.groupby('MsgRank')['MsgValueDECount'].sum().reset_index()
+#            trace_msg_rank_count.append(msg_rank_count)
         
         # Erstellen Sie die DataFrame mit den gewünschten Einträgen
-        df = pd.DataFrame({
-            "Message Rank": ["< 99", -1, 1, 2, 3, 4, 5, 6, "> 98", 99, 101, 102, 103, 104, 105, 106],
-            "Color": ["-", "#BDBDBD", "#82FA58", "#b0721e", "#0B610B", "#2E64FE", "#00FFFF", "#ffffff", "-", "#A4A4A4", "#ACFA58", "#bb7633", "#3f7633", "#0000FF", "#4aeaff", "#ffffff"],
-            "Meaning": ["durch den Drucker behebbare Meldungen", "noch nicht zugeordnet", "Information", "Warnung", "eingeschränkte Produktion möglich", "keine Produktion möglich", "nicht zuordenbar", "Info nur im Logfile", "durch den Drucker nicht behebare Meldungen", "noch nicht zugeordnet", "Information", "Warnung", "eingeschränkte Produktion möglich", "keine Produktion möglich", "nicht zuordenbar", "Info nur im Logfile"],
-        })
+#        df = pd.DataFrame({
+#            "Message Rank": ["< 99", -1, 1, 2, 3, 4, 5, 6, "> 98", 99, 101, 102, 103, 104, 105, 106],
+#            "Color": ["-", "#BDBDBD", "#82FA58", "#b0721e", "#0B610B", "#2E64FE", "#00FFFF", "#ffffff", "-", "#A4A4A4", "#ACFA58", "#bb7633", "#3f7633", "#0000FF", "#4aeaff", "#ffffff"],
+#            "Meaning": ["durch den Drucker behebbare Meldungen", "noch nicht zugeordnet", "Information", "Warnung", "eingeschränkte Produktion möglich", "keine Produktion möglich", "nicht zuordenbar", "Info nur im Logfile", "durch den Drucker nicht behebare Meldungen", "noch nicht zugeordnet", "Information", "Warnung", "eingeschränkte Produktion möglich", "keine Produktion möglich", "nicht zuordenbar", "Info nur im Logfile"],
+#        })
 
         # Iteriere durch jede Trace-Information in trace_msg_rank_count und fülle den DataFrame
-        for index, msg_rank_count_df in enumerate(trace_msg_rank_count):
-            msg_rank_count_df = msg_rank_count_df.rename(columns={'MsgValueDECount': f'Print job {index + 1}'})
-            df = pd.merge(df, msg_rank_count_df, how='left', left_on='Message Rank', right_on='MsgRank')
-            df = df.drop(columns=['MsgRank'])
+#        for index, msg_rank_count_df in enumerate(trace_msg_rank_count):
+#            msg_rank_count_df = msg_rank_count_df.rename(columns={'MsgValueDECount': f'Print job {index + 1}'})
+#            df = pd.merge(df, msg_rank_count_df, how='left', left_on='Message Rank', right_on='MsgRank')
+#            df = df.drop(columns=['MsgRank'])
 
         # Fülle NaN-Werte mit 0
-        df = df.fillna(0)
+#        df = df.fillna(0)
 
         #Zellen werden mit Hilfe des Mappings farblich hervorgehoben
-        def highlight_cells(val):
-            color = ''
-            for key, value in mapping.items():
-                if value in val:
-                    color = value
-                    break
-            return f'background-color: {color}'
+#        def highlight_cells(val):
+#            color = ''
+#            for key, value in mapping.items():
+#                if value in val:
+#                    color = value
+#                    break
+#            return f'background-color: {color}'
 
         #Anzahl ist immer ganzzahlig und soll daher Integer sein
-        def format_number(val):
-            try:
-                return f'{int(val):,}'
-            except ValueError:
-                return val
+#        def format_number(val):
+#            try:
+#                return f'{int(val):,}'
+#            except ValueError:
+#                return val
 
         #Zelle für die beiden Oberbegriffe hat keinen Eintrag
-        for i in range(anzahl_traces):
-            row_index = 0
-            for x in range (2):    
-                column_name = f'Print job {i + 1}'  
-                new_value = ""
-                df.at[row_index, column_name] = new_value
-                row_index += 8
+#        for i in range(anzahl_traces):
+#            row_index = 0
+#            for x in range (2):    
+#                column_name = f'Print job {i + 1}'  
+#                new_value = ""
+#                df.at[row_index, column_name] = new_value
+#                row_index += 8
 
-        st.dataframe(
-            df.style.applymap(highlight_cells, subset=['Color']).format(subset=[f'Print job {index + 1}' for index in range(len(trace_msg_rank_count))], formatter=format_number),
-            use_container_width=True,
-            column_config={
-                "Message Rank": "Message Rank",
-                "Meaning": "Meaning",
-                **{f'Print job {index + 1}': f'Number Print job {index + 1}' for index in range(len(trace_msg_rank_count))}
-            },
-            hide_index=True,
-            height=597,
-        )
+#        st.dataframe(
+#            df.style.applymap(highlight_cells, subset=['Color']).format(subset=[f'Print job {index + 1}' for index in range(len(trace_msg_rank_count))], formatter=format_number),
+#            use_container_width=True,
+#            column_config={
+#                "Message Rank": "Message Rank",
+#                "Meaning": "Meaning",
+#                **{f'Print job {index + 1}': f'Number Print job {index + 1}' for index in range(len(trace_msg_rank_count))}
+#            },
+#            hide_index=True,
+#            height=597,
+#        )
         
-        st.divider()
+#        st.divider()
         # Erstelle eine leere Liste, um die Top 10 MsgValueDE mit Count zu speichern
-        top_10_msgs_list = []
+#        top_10_msgs_list = []
 
-        for trace_info in trace_info_list:
-            top_10_msgs = trace_info.head(10)[['MsgValueDE', 'MsgValueDECount']]
-            top_10_msgs_list.append(top_10_msgs)
+#        for trace_info in trace_info_list:
+#            top_10_msgs = trace_info.head(10)[['MsgValueDE', 'MsgValueDECount']]
+#            top_10_msgs_list.append(top_10_msgs)
 
-        for index in range(0, len(top_10_msgs_list), 2):
-            st.markdown(f"**Print job {index + 1} and {index + 2}:**")
+#        for index in range(0, len(top_10_msgs_list), 2):
+#            st.markdown(f"**Print job {index + 1} and {index + 2}:**")
             
             # Erstelle zwei Spalten für die Anzeige der Tabellen nebeneinander
-            col1, col2 = st.columns(2)
+#            col1, col2 = st.columns(2)
 
             # Zeige den DataFrame für den ersten Print-Job in der ersten Spalte an
-            col1.write(f"Top 10 MsgValueDE for print job {index + 1}:")
-            col1.dataframe(top_10_msgs_list[index], hide_index=True)
+#            col1.write(f"Top 10 MsgValueDE for print job {index + 1}:")
+#            col1.dataframe(top_10_msgs_list[index], hide_index=True)
 
             # Überprüfe, ob es ein weiteres Element in der Liste gibt, um es in der zweiten Spalte anzuzeigen
-            if index + 1 < len(top_10_msgs_list):
-                col2.write(f"Top 10 MsgValueDE for print job {index + 2}:")
-                col2.dataframe(top_10_msgs_list[index + 1], hide_index=True)
+#            if index + 1 < len(top_10_msgs_list):
+#                col2.write(f"Top 10 MsgValueDE for print job {index + 2}:")
+#                col2.dataframe(top_10_msgs_list[index + 1], hide_index=True)
 
-
-         # Zeige die Liste mit den Top 10 MsgValueDE für jede Trace an
-        #for index, top_10_msgs in enumerate(top_10_msgs_list):
-        #    st.write(f"Top 10 MsgValueDE for print job {index + 1}:")
-        #    st.dataframe(top_10_msgs, hide_index=True)
+       
                 
 
 def page3():
