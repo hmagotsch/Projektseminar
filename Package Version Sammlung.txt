@@ -14,3 +14,4 @@ react-flow-renderer - 10.3.17
 web-worker - 1.2.0
 nodejs - 20.9.0
 npm - 10.1.0
+xgboost - 2.0.3
