@@ -7,7 +7,6 @@ Original file is located at
     https://colab.research.google.com/drive/1y0cGV0eHz--7CriyqlXnYk75vXVqDbrN
 """
 
-import tensorflow as tf
 import os
 import pandas as pd
 import numpy as np
