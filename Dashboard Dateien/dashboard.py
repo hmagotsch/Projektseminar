@@ -576,15 +576,15 @@ def page2():
         
     with tab1:
         st.header("BPMN Model")
-        st.image("bpmn.png")
+        st.image("https://i.imgur.com/QIRXiWg.png")
 
     with tab2:
         st.header("Directly-Follows Graph")
-        st.image("heu_net.png")
+        st.image("https://i.imgur.com/rb0rweN.png")
 
     with tab3:
         st.header("Trace(s)")
-        st.image("trace.png")
+        st.image("https://i.imgur.com/dM6RG2J.png")
 
 
     st.divider()
@@ -728,15 +728,15 @@ def page2():
         
 #        with tab1:
 #            st.header("BPMN Model")
-#            st.image("bpmn.png")
+#            st.image("https://i.imgur.com/QIRXiWg.png")
 
 #        with tab2:
 #            st.header("Directly-Follows Graph")
-#            st.image("heu_net.png")
+#            st.image("https://i.imgur.com/rb0rweN.png")
 
 #        with tab3:
 #            st.header("Trace(s)")
-#            st.image("trace.png")
+#            st.image("https://i.imgur.com/dM6RG2J.png")
 
 
 #        st.divider()
