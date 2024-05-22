@@ -36,8 +36,6 @@ def home():
     with col2:
         st.header("Process View")
         st.image("https://i.imgur.com/B4qupGd.jpg", width=500, clamp=True)
-        #expander2 = st.expander("See explanation")
-        #expander2.write("The process view page displays the printing process of a job and machine using BPMN notation, leveraging process mining to extract log entries. This allows for the automated generation of process diagrams and in-depth analysis.")
         st.write("The process view page displays the printing process of a job and machine using BPMN notation, leveraging process mining to extract log entries. This allows for the automated generation of process diagrams and in-depth analysis.")
 
     # Second row with two columns
