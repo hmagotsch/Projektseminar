@@ -8,14 +8,14 @@ Package-Versionen
 
 **Daten-Aufbereitung**
 JobPartitioning.py
-	Contains the job division of the data based on the Koenig & Bauer phase division. 
+Contains the job division of the data based on the Koenig & Bauer phase division. 
 
 **KPI-Ansätze**
 gewichtete_kombinierte_zeit_pro_sheet.py
-	KPI that evaluates the combination of weighted non-productive production time and productive production time
+KPI that evaluates the combination of weighted non-productive production time and productive production time
 
 oee_lin_reg.py
-	Plots the overall equipment effectiveness for a machine and creates a linear regression based on the average speed of the whole job
+Plots the overall equipment effectiveness for a machine and creates a linear regression based on the average speed of the whole job
 
  **Prozessvisualisierung**
 
@@ -23,7 +23,7 @@ oee_lin_reg.py
 +++Da die Dateien mit einer Vielzahl an Packages arbeiten, kann eine neue Version der Packages Änderungen am Quellcode erfordern+++
 
 create_xes_file.py
-	Creates .xes file from dataset, that can later be used for process visualization.
+Creates .xes file from dataset, that can later be used for process visualization.
 
 Die Dateien bpmn.py, dfg.py und traces.py analysieren jeweils eine hochgeladene XES-Datei (XES-Dateien können durch create_xes_file.py für beliebige 
 Druckaufträge erstellt werden) und erstellen eine .js output-Datei, die die einzelnen 
@@ -71,69 +71,69 @@ Beispieldatei, die als Input für die React-App genutzt werden kann. Die Datei e
 
 **Clustering**
 MessagesTextClustering.py
-	Messages are clustered using a text analysis.
+Messages are clustered using a text analysis.
 
 clustering_jobs.py
-        clusters the jobs per machine, using k-means (and DBSCAN as well as hierarchical Clustering)
+clusters the jobs per machine, using k-means (and DBSCAN as well as hierarchical Clustering)
 
 clustering_machines.py
-        clusters the machines, using k-means
+clusters the machines, using k-means
 
 cluster_machines_preprocessing.py
-        preprocessing to clustering_von_maschinen.py: extract relevant information fromm over 200 machines and save relevant data in a single data frame
+preprocessing to clustering_von_maschinen.py: extract relevant information fromm over 200 machines and save relevant data in a single data frame
 
 
 **Predictions**
 
 MsgValueDE:
-	MostFrequentMessage.py
-		Benchmark model for message predictions.
+MostFrequentMessage.py
+Benchmark model for message predictions.
 
-	PredictMessage_MNB1.py
-		Based on one message, the next message is predicted using a multonimial naive bias approach.
+PredictMessage_MNB1.py
+Based on one message, the next message is predicted using a multonimial naive bias approach.
 
-	PredictMessage_MNB2.py
-		Based on a sequence of messages, the next message is predicted using a multonimial naive bias approach.
-		The sequence lengths can be adjusted as needed.
+PredictMessage_MNB2.py
+Based on a sequence of messages, the next message is predicted using a multonimial naive bias approach.
+The sequence lengths can be adjusted as needed.
 
-	PredictMessage_MarkovChain.py
-		Based on a sequence of messages, the next message is predicted using a markov chain approach.
-		The sequence lengths can be adjusted as needed.
+PredictMessage_MarkovChain.py
+Based on a sequence of messages, the next message is predicted using a markov chain approach.
+The sequence lengths can be adjusted as needed.
 
 Production Stop:
-	PredictProductionStop_LSTM.py
-		A LSTM model is trained so it can predict whether a message with MsgRank 104 (production downtime) will occur in the next minute based on a sequence of past messages with a certain length.
+PredictProductionStop_LSTM.py
+A LSTM model is trained so it can predict whether a message with MsgRank 104 (production downtime) will occur in the next minute based on a sequence of past messages with a certain length.
 	
-	PredictProductionStop_mostFrequent.py
-		Benchmark model for the LSTM model in PredictProductionStop_LSTM.py.
+PredictProductionStop_mostFrequent.py
+Benchmark model for the LSTM model in PredictProductionStop_LSTM.py.
 
-	PredictProductionStop_RandomForest.py
-		A Random Forest model is trained so it can predict whether a message with MsgRank 104 (production downtime) will occur in the next minute. Model was neglected due to ill fitting.
+PredictProductionStop_RandomForest.py
+A Random Forest model is trained so it can predict whether a message with MsgRank 104 (production downtime) will occur in the next minute. Model was neglected due to ill fitting.
 
   **MsgRank**
 benchmark_msgrank_b.py
-        calculates the benchmark
+calculates the benchmark
   
 xgboost_&_rf_msgrank_.py
 creates predictions with random forest and xgboost
 
 smote_&_rf_msgrank_.py
-        samples the data with smote and creates predictions with random forest
+samples the data with smote and creates predictions with random forest
         
 smote_&_xgboostmsgrank_.py
-        samples the data with smote and creates predictions with xgboost
+samples the data with smote and creates predictions with xgboost
 
 adasyn_&_xgboostmsgrank_.py
-        samples the data with adasyn and creates predictions with xgboost
+samples the data with adasyn and creates predictions with xgboost
 
 adasyn_&_rf_msgrank_.py
-        samples the data with adasyn and creates predictions with random forest
+samples the data with adasyn and creates predictions with random forest
 
 fine_tuning_xgboost.py
-        fine tuning of the xgboost model by use of different features
+fine tuning of the xgboost model by use of different features
 
 without_locids_fine_tuning_xgboost.py
-        fine tuning of the xgboost model without using LocIDs
+fine tuning of the xgboost model without using LocIDs
 
 
 **Package-Versionen**
